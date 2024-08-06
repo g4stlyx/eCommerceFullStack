@@ -1,4 +1,4 @@
-package com.g4stly.restApi.jwt;
+package com.g4stly.eCommerce.jwt;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

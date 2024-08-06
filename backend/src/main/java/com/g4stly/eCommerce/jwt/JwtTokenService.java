@@ -1,4 +1,4 @@
-package com.g4stly.restApi.jwt;
+package com.g4stly.eCommerce.jwt;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

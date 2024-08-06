@@ -1,4 +1,4 @@
-package com.g4stly.restApi.jwt;
+package com.g4stly.eCommerce.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,7 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.stereotype.Service;
-import com.g4stly.restApi.user.UserRepository;
+
+import com.g4stly.eCommerce.repositories.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -17,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.g4stly.restApi.user.User user = userRepository.findByUsername(username)
+        com.g4stly.eCommerce.models.User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         UserBuilder builder = User.withUsername(user.getUsername())

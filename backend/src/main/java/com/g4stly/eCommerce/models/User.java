@@ -1,4 +1,4 @@
-package com.g4stly.restApi.user;
+package com.g4stly.eCommerce.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

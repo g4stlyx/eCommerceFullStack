@@ -1,4 +1,4 @@
-package com.g4stly.restApi.user;
+package com.g4stly.eCommerce.controllers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.g4stly.eCommerce.models.User;
+import com.g4stly.eCommerce.repositories.UserRepository;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
