@@ -22,13 +22,22 @@
     * to run the frontend part, open frontend folder:
         * run `npm i --force || npm start` in terminal
 
+## Models
+    [x] User: id, username, password, email, phone, address, isAdmin, orders*, wishlist*, reviews*, cart*
+    [x] Product: id, name, description, category_id, imgSrc, quantity, price, createdAt, updatedAt
+    [x] Category: id, name, description, products, imgSrc
+    [x] Review: id, star, title, text, productId, orderId, createdAt, updatedAt
+    [x] Order: id, user_id, products, status, total_price, order_date
+    [x] Cart: id, user_id, products
+    [x] Wishlist: id, user_id, products
+
 ## Endpoints
 yeah doesnt seem easy
 
     /
-    [ ] POST /login                                         login                               #only if no tokens
-    [ ] POST /signup                                        signup                              #only if no tokens
-    [ ] POST /logout                                        logout                              #only if logged in
+    [ ] POST /login                                         (frontend, will use /authenticate)  #only if no tokens
+    [x] POST /signup                                        #only if no tokens
+    [ ] POST /logout                                        (frontend, will remove the token)   #only if logged in
 
     /products
     [ ] GET /                                               get all products
@@ -52,11 +61,11 @@ yeah doesnt seem easy
     [ ] DELETE /$id                                         delete category by id               #only admins
 
     /users
-    [ ] GET /                                               get all users                       #only admins
-    [ ] GET /$id                                            get user by id                      only show the current user
-    [ ] POST /                                              create user                         #only admins
-    [ ] PUT /$id                                            update user by id                   #only admins
-    [ ] DELETE /$id                                         delete user by id                   #only admins
+    [x] GET /                                               get all users                       #only admins
+    [x] GET /$id                                            get user by id                      only show the current user
+    [x] POST /                                              create user                         #only admins
+    [x] PUT /$id                                            update user by id                   #only admins
+    [x] DELETE /$id                                         delete user by id                   #only admins
     [ ] GET /orders                                         Get orders for the current user.
     [?] POST /{id}/cancel                                   Cancel an order.
     [?] POST /forgot-password
