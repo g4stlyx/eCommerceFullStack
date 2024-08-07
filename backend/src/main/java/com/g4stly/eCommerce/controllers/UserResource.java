@@ -66,10 +66,8 @@ public class UserResource {
         }
     
         try {
-            System.out.println("Password before encoding: " + user.getPassword());
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashedPassword);
-            System.out.println("Password after encoding: " + hashedPassword);
     
             User savedUser = userRepository.save(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);

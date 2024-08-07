@@ -9,6 +9,8 @@ import jakarta.persistence.ManyToOne;
 @Entity(name= "order_items")
 public class OrderItem {
 
+    OrderItem(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

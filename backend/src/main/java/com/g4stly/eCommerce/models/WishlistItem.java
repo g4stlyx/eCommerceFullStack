@@ -8,6 +8,9 @@ import jakarta.persistence.ManyToOne;
 
 @Entity(name="wishlist_items")
 public class WishlistItem {
+
+    WishlistItem(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

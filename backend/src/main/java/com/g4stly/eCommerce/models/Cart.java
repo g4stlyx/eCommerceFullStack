@@ -10,6 +10,9 @@ import jakarta.persistence.OneToOne;
 
 @Entity(name= "carts")
 public class Cart {
+
+    Cart(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

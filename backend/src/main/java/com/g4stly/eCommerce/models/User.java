@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity(name="users")
 public class User {
+    
     public User(){}
 
     @Id

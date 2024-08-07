@@ -10,6 +10,9 @@ import jakarta.persistence.OneToMany;
 
 @Entity(name="categories")
 public class Category {
+
+    Category(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

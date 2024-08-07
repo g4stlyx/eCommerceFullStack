@@ -10,6 +10,9 @@ import jakarta.persistence.ManyToOne;
 
 @Entity(name="products")
 public class Product {
+
+    Product(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

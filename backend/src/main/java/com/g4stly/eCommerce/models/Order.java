@@ -11,8 +11,8 @@ import java.util.List;
 
 @Entity(name = "orders")
 public class Order {
-    public Order() {
-    }
+    
+    public Order() {}
 
     @Id
     @GeneratedValue

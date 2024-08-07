@@ -8,6 +8,9 @@ import jakarta.persistence.ManyToOne;
 
 @Entity(name="cart_items")
 public class CartItem {
+
+    CartItem(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

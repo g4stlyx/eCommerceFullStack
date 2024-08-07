@@ -54,11 +54,11 @@ yeah doesnt seem easy
     [ ] DELETE /{id}/reviews/${review_id}                   Delete a review.
 
     /categories
-    [ ] GET /                                               get all categories
-    [ ] GET /$id                                            get category by id
-    [ ] POST /                                              create category                     #only admins
-    [ ] PUT /$id                                            update category by id               #only admins
-    [ ] DELETE /$id                                         delete category by id               #only admins
+    [x] GET /                                               get all categories
+    [x] GET /$id                                            get category by id
+    [x] POST /                                              create category                     #only admins
+    [x] PUT /$id                                            update category by id               #only admins
+    [x] DELETE /$id                                         delete category by id               #only admins
 
     /users
     [x] GET /                                               get all users                       #only admins

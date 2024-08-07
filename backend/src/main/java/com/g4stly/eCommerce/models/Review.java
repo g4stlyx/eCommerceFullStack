@@ -9,6 +9,9 @@ import jakarta.persistence.ManyToOne;
 
 @Entity(name= "reviews")
 public class Review {
+
+    Review(){}
+
     @Id 
     @GeneratedValue
     private Integer id;

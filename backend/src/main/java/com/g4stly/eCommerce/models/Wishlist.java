@@ -10,6 +10,9 @@ import jakarta.persistence.OneToOne;
 
 @Entity(name= "wishlist")
 public class Wishlist {
+
+    Wishlist(){}
+
     @Id 
     @GeneratedValue
     private Integer id;
