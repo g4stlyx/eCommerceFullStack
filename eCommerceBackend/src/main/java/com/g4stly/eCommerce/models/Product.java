@@ -1,6 +1,9 @@
 package com.g4stly.eCommerce.models;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +25,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnoreProperties("products")  // Prevents serialization of the products field in the Category class
     private Category category;
 
     private String name;

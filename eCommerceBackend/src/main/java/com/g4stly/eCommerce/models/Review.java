@@ -24,18 +24,18 @@ public class Review {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int star;
+    private double rating;
     private String title;
     private String text;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    public Review(Integer id, User user, Product product, int star, String title, String text, LocalDateTime createdAt,
+    public Review(Integer id, User user, Product product, double rating, String title, String text, LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.product = product;
-        this.star = star;
+        this.rating = rating;
         this.title = title;
         this.text = text;
         this.createdAt = createdAt;
@@ -48,8 +48,8 @@ public class Review {
     public void setUser(User user) {this.user = user;}
     public Product getProduct() {return product;}
     public void setProduct(Product product) {this.product = product;}
-    public int getStar() {return star;}
-    public void setStar(int star) {this.star = star;}
+    public double getRating() {return rating;}
+    public void setRating(double rating) {this.rating = rating;}
     public String getTitle() {return title;}
     public void setTitle(String title) {this.title = title;}
     public String getText() {return text;}
@@ -61,7 +61,7 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review [id=" + id + ", user=" + user + ", product=" + product + ", star=" + star + ", title=" + title
+        return "Review [id=" + id + ", user=" + user + ", product=" + product + ", rating=" + rating + ", title=" + title
                 + ", text=" + text + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
     }
 

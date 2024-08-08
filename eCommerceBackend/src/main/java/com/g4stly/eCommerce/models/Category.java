@@ -2,6 +2,8 @@ package com.g4stly.eCommerce.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ public class Category {
     private Integer id;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnoreProperties("category")  // Prevents serialization of the category field in the Product class
     private List<Product> products;
 
     private String name;

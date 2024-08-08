@@ -40,18 +40,19 @@ yeah doesnt seem easy
     [ ] POST /logout                                        (frontend, will remove the token)   #only if logged in
 
     /products
-    [ ] GET /                                               get all products
-    [ ] GET /$id                                            get product by id
-    [ ] POST /                                              create product                      #only admins
-    [ ] PUT /$id                                            update product by id                #only admins
-    [ ] DELETE /$id                                         delete product by id                #only admins
+    [x] GET /                                               get all products
+    [x] GET /$id                                            get product by id
+    [x] POST /                                              create product                      #only admins
+    [x] PUT /$id                                            update product by id                #only admins
+    [x] DELETE /$id                                         delete product by id                #only admins
     [?] GET /search?q=                                      Search products by query.
     [?] GET /filter?category=&price_min=&price_max=         Filter products.
-    [ ] GET /{id}/reviews                                   Get reviews for a product.
-    [ ] GET /{id}/reviews/${review_id}                      Get a specific review
-    [ ] POST /{id}/reviews                                  Add a review for a product.
-    [ ] PUT /{id}/reviews/${review_id}                      Update a review.
-    [ ] DELETE /{id}/reviews/${review_id}                   Delete a review.
+
+    [x] GET /{id}/reviews                                   Get reviews for a product.
+    [x] GET /{id}/reviews/${review_id}                      Get a specific review
+    [x] POST /{id}/reviews                                  Add a review for a product.
+    [x] PUT /{id}/reviews/${review_id}                      Update a review.
+    [x] DELETE /{id}/reviews/${review_id}                   Delete a review.
 
     /categories
     [x] GET /                                               get all categories
