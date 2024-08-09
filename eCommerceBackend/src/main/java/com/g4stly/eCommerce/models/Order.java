@@ -9,6 +9,8 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity(name = "orders")
 public class Order {
     
@@ -20,6 +22,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"orders", "reviews", "cart", "wishlist"})
     private User user;
 
     @OneToMany(mappedBy = "order")

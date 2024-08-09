@@ -1,6 +1,11 @@
 package com.g4stly.eCommerce.models;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -77,6 +82,15 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
     public String getAddress() {return address;}
     public void setAddress(String address) {this.address = address;}
+
+    public List<Order> getOrders() {return orders;}
+    public void setOrders(List<Order> orders) {this.orders = orders;}
+    public List<Review> getReviews() {return reviews;}
+    public void setReviews(List<Review> reviews) {this.reviews = reviews;}
+    public Cart getCart() {return cart;}
+    public void setCart(Cart cart) {this.cart = cart;}
+    public Wishlist getWishlist() {return wishlist;}
+    public void setWishlist(Wishlist wishlist) {this.wishlist = wishlist;}
 
     @Override
     public String toString() {

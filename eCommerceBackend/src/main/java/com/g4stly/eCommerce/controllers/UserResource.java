@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -135,6 +136,22 @@ public class UserResource {
             userRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users/{username}/orders")
+    public ResponseEntity<?> getOrdersByUsername(@PathVariable String username){
+        try{
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            if(!username.equals(currentUsername) && !user.isAdmin()){
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(user.getOrders(), HttpStatus.OK);
+        }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
