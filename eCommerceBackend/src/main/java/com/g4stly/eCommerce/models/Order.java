@@ -1,5 +1,6 @@
 package com.g4stly.eCommerce.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,7 +26,8 @@ public class Order {
     @JsonIgnoreProperties({"orders", "reviews", "cart", "wishlist"})
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"order"})
     private List<OrderItem> orderItems;
 
     private String status;
