@@ -77,7 +77,6 @@ public class OrderResource {
             orderDetails.setUser(user);
             orderDetails.setOrderDate(LocalDateTime.now());
 
-            // ! json'da sadece orderItems gönderilecek gibi duruyor, bir tık karışık
             double totalPrice = 0;
             for (OrderItem item : orderDetails.getOrderItems()) {
                 totalPrice += item.getProduct().getPrice() * item.getQuantity();

@@ -67,29 +67,28 @@ yeah doesnt seem easy
     [x] POST /                                              create user                         #only admins
     [x] PUT /$id                                            update user by id                   #only admins
     [x] DELETE /$id                                         delete user by id                   #only admins
-    [ ] GET /orders                                         Get orders for the current user.
-    [?] POST /{id}/cancel                                   Cancel an order.
+    [x] GET /{username}/orders                              Get orders for the current user.
     [?] POST /forgot-password
     [?] POST /reset-password
 
     /orders
-    [ ] GET /                                               get all orders                      #only admins
-    [ ] GET /{id}                                           get order by id
-    [ ] POST /                                              create order
-    [ ] POST /{id}                                          update order by id 
+    [x] GET /                                               get all orders                      #only admins
+    [x] GET /{id}                                           get order by id
+    ![x] POST /                                             create order                       # there are things to change
+    [?] POST /{id}                                          update order by id                  # do we realy need this? it may be open to admins only, otherwise users shouldnt be able to update orders normally
+    [x] POST /{id}/cancel                                   Cancel an order.
 
     /cart
-    [ ] POST /                                              Create cart
-    [ ] GET /{id}                                           Get items for card with ID
-    [ ] POST /{id}                                          Add CartItem to cart with ID
-    [ ] DELETE /{id}/{product_id}                           Remove product with ID {product_id} from cart with ID {id}
-    [ ] PUT /{id}/quantity                                  Updates cart item, i.e. set product quantity
-    [ ] POST /{id}/order                                    Create order from cart
+    [x] GET /                                               Get the current user's cart
+    [x] GET /{id}                                           Get items for card with ID (bunun yerine kullanıcı adı ile sepet çekilebilir, her kullanıcı 1 sepete sahip olur zaten)
+    [x] DELETE /{cartItemId}                                Remove cart item with ID {cartItemId} from the current users cart
+    [x] PUT /{cartItemId}/quantity                          Updates cart item, i.e. set product quantity
+    [x] POST /{cartId}/order                                Create order from cart
 
     /wishlist
-    [ ] GET /
-    [ ] POST /
-    [ ] DELETE /{product_id}
+    [x] GET /                                               Get the current user's wishlist
+    [x] POST /{product_id}                                  Add item to the wishlist
+    [x] DELETE /{product_id}                                Remove item from the wishlist
 
 
 ## A modern, production-ready frontend this time.

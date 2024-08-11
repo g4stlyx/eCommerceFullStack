@@ -14,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 @Entity(name="products")
 public class Product {
 
-    Product(){}
+    public Product(){}
 
     @Id 
     @GeneratedValue

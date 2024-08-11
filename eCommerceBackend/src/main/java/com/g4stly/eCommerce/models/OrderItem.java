@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 @Entity(name= "order_items")
 public class OrderItem {
 
-    OrderItem(){}
+    public OrderItem(){}
 
     @Id 
     @GeneratedValue

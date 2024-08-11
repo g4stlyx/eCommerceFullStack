@@ -11,7 +11,7 @@ import jakarta.persistence.OneToOne;
 @Entity(name= "carts")
 public class Cart {
 
-    Cart(){}
+    public Cart(){}
 
     @Id 
     @GeneratedValue

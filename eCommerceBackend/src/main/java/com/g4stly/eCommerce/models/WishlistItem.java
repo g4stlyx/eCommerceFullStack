@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 @Entity(name="wishlist_items")
 public class WishlistItem {
 
-    WishlistItem(){}
+    public WishlistItem(){}
 
     @Id 
     @GeneratedValue

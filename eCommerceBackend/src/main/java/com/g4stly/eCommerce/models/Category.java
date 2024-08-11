@@ -13,7 +13,7 @@ import jakarta.persistence.OneToMany;
 @Entity(name="categories")
 public class Category {
 
-    Category(){}
+    public Category(){}
 
     @Id 
     @GeneratedValue

@@ -11,7 +11,7 @@ import jakarta.persistence.OneToOne;
 @Entity(name= "wishlist")
 public class Wishlist {
 
-    Wishlist(){}
+    public Wishlist(){}
 
     @Id 
     @GeneratedValue

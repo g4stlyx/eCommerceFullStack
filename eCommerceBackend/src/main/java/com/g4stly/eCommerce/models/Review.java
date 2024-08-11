@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 @Entity(name= "reviews")
 public class Review {
 
-    Review(){}
+    public Review(){}
 
     @Id 
     @GeneratedValue
