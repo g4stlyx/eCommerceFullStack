@@ -2,6 +2,9 @@ package com.g4stly.eCommerce.controllers;
 
 import java.util.Optional;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,7 +52,12 @@ public class CartResource {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new ResponseEntity<>(user.getCart(), HttpStatus.OK);
+        Cart cart = user.getCart();
+        if (cart == null) {
+            return new ResponseEntity<>("Your cart is empty :(", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
     @GetMapping("/cart/{id}")
@@ -84,12 +92,22 @@ public class CartResource {
             cart = cartOpt.get();
         } else {
             cart = new Cart();
+            List<CartItem> cartItems = new ArrayList<CartItem>();
             cart.setUser(user);
+            cart.setCartItems(cartItems);
             cartRepository.save(cart);
         }
         CartItem item = new CartItem();
+        for (CartItem cartItem : cart.getCartItems()) {
+            Product productToCheck = cartItem.getProduct();
+            if (productToCheck.getId().equals(productId)) {
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                return new ResponseEntity<>(cart, HttpStatus.OK);
+            }
+        }
         item.setProduct(product);
         item.setCart(cart);
+        item.setQuantity(1);
         cartItemRepository.save(item);
         cart.getCartItems().add(item);
         cartRepository.save(cart);
@@ -116,6 +134,9 @@ public class CartResource {
                 cart.getCartItems().remove(itemToRemove);
                 cartItemRepository.delete(itemToRemove);
                 cartRepository.save(cart);
+            }
+            if (itemToRemove == null) {
+                throw new RuntimeException("Item with id " + cartItemId + " couldn't be found in your cart");
             }
         }
     }
@@ -155,11 +176,14 @@ public class CartResource {
 
         Order order = new Order();
         order.setUser(user);
-        orderRepository.save(order); 
-        
+        orderRepository.save(order);
+
         // converting CartItems to OrderItems and add them to the order
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
+            if(order.getOrderItems() == null){
+                order.setOrderItems(new ArrayList<>());
+            }
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
@@ -179,6 +203,10 @@ public class CartResource {
 
         orderRepository.save(order);
 
+        //TODO: doesnt remove cart items after cart transformed into an order. does not break the app but may be annoying
+        for (CartItem cartItem : cart.getCartItems()) {
+            cartItemRepository.delete(cartItem);
+        }
         cart.getCartItems().clear();
         cartRepository.save(cart);
 

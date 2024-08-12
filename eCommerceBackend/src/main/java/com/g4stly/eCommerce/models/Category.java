@@ -20,7 +20,7 @@ public class Category {
     private Integer id;
 
     @OneToMany(mappedBy = "category")
-    @JsonIgnoreProperties("category")  // Prevents serialization of the category field in the Product class
+    @JsonIgnoreProperties("category")
     private List<Product> products;
 
     private String name;

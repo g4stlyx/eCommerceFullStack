@@ -1,6 +1,9 @@
 package com.g4stly.eCommerce.models;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,9 +22,11 @@ public class Wishlist {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"orders", "reviews", "cart", "wishlist"})
     private User user;
 
     @OneToMany(mappedBy = "wishlist")
+    @JsonIgnoreProperties({"wishlist"})
     private List<WishlistItem> wishlistItems;
 
     public Wishlist(Integer id, User user, List<WishlistItem> wishlistItems) {

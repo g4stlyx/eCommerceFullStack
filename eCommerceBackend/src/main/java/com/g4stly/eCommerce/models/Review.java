@@ -1,6 +1,9 @@
 package com.g4stly.eCommerce.models;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -18,6 +21,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"orders", "reviews", "cart", "wishlist"})
     private User user;
 
     @ManyToOne

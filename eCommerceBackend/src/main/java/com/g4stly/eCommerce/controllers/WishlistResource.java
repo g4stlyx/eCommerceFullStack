@@ -1,6 +1,8 @@
 package com.g4stly.eCommerce.controllers;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,10 +62,19 @@ public class WishlistResource {
             wishlist = wishlistOpt.get();
         } else {
             wishlist = new Wishlist();
+            List<WishlistItem> wishlistItems = new ArrayList<WishlistItem>();
             wishlist.setUser(user);
+            wishlist.setWishlistItems(wishlistItems);
             wishlistRepository.save(wishlist);
         }
         WishlistItem item = new WishlistItem();
+        //if item already exists in the list, dont add.
+        for(WishlistItem wishlistItem : wishlist.getWishlistItems()){
+            Product productToCheck = wishlistItem.getProduct();
+            if(productToCheck.getId().equals(productId)){
+                return new ResponseEntity<>("The item already exists in your wishlist", HttpStatus.BAD_REQUEST);
+            }
+        }
         item.setProduct(product);
         item.setWishlist(wishlist);
         wishlistItemRepository.save(item);
@@ -92,6 +103,9 @@ public class WishlistResource {
                 wishlist.getWishlistItems().remove(itemToRemove);
                 wishlistItemRepository.delete(itemToRemove);
                 wishlistRepository.save(wishlist);
+            }
+            if(itemToRemove == null){
+                throw new RuntimeException("Item with id "+ wishlistItemId +" couldn't be found in your wishlist");
             }
         }
     }
