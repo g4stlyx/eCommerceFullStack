@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.g4stly.eCommerce.models.Category;
+import com.g4stly.eCommerce.models.User;
 import com.g4stly.eCommerce.repositories.CategoryRepository;
+import com.g4stly.eCommerce.repositories.UserRepository;
 
 @RestController
 public class CategoryResource {
-    
+
     private CategoryRepository categoryRepository;
-    CategoryResource(CategoryRepository categoryRepository){this.categoryRepository = categoryRepository;}
+    private UserRepository userRepository;
+
+    CategoryResource(CategoryRepository categoryRepository, UserRepository userRepository) {
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/categories")
     public List<Category> getAllCategories() {
@@ -29,24 +37,32 @@ public class CategoryResource {
     }
 
     @GetMapping("/categories/{category_id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable String category_id){
-        try{
+    public ResponseEntity<?> getCategoryById(@PathVariable String category_id) {
+        try {
             Optional<Category> categoryOpt = categoryRepository.findById(Integer.parseInt(category_id));
-            if(!categoryOpt.isPresent()){
+            if (!categoryOpt.isPresent()) {
                 throw new NotFoundException();
             }
             return new ResponseEntity<>(categoryOpt.get(), HttpStatus.CREATED);
-        }catch(NotFoundException e){
+        } catch (NotFoundException e) {
             return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<?> createCategory(@RequestBody Category category){
-        try{
+    public ResponseEntity<?> createCategory(@RequestBody Category category) {
+        try {
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (!currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+
             Category savedCategory = categoryRepository.save(category);
             return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -59,8 +75,16 @@ public class CategoryResource {
     public ResponseEntity<?> updateCategory(@PathVariable String category_id, @RequestBody Category categoryDetails) {
         try {
             Category category = categoryRepository.findById(Integer.parseInt(category_id))
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            
+
+            if (!currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+
             category.setName(categoryDetails.getName());
             category.setDescription(categoryDetails.getDescription());
             category.setImgSrc(categoryDetails.getImgSrc());
@@ -77,6 +101,14 @@ public class CategoryResource {
     @DeleteMapping("/categories/{category_id}")
     public ResponseEntity<?> deleteById(@PathVariable Integer category_id) {
         try {
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (!currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+            
             categoryRepository.deleteById(category_id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

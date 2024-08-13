@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.g4stly.eCommerce.models.Product;
@@ -55,7 +56,7 @@ public class ProductResource {
     @PostMapping("/products")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
-            if(product.getCategory() != null || product.getCategory().getId() != null){
+            if (product.getCategory() != null || product.getCategory().getId() != null) {
                 Category detaildCategory = categoryRepository.findById(product.getCategory().getId()).get();
                 product.setCategory(detaildCategory);
             }
@@ -77,10 +78,10 @@ public class ProductResource {
                     .orElseThrow(() -> new RuntimeException("product not found"));
 
             Category category = product.getCategory();
-            if(productDetails.getCategory() != null || productDetails.getCategory().getId() != null){
+            if (productDetails.getCategory() != null || productDetails.getCategory().getId() != null) {
                 Category detaildCategory = categoryRepository.findById(productDetails.getCategory().getId()).get();
                 product.setCategory(detaildCategory);
-            }else if (category != null && category.getId() != null) {
+            } else if (category != null && category.getId() != null) {
                 Category existingCategory = categoryRepository.findById(category.getId())
                         .orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
                 product.setCategory(existingCategory);
@@ -89,7 +90,7 @@ public class ProductResource {
             product.setName(productDetails.getName());
             product.setDescription(productDetails.getDescription());
             product.setImgSrc(productDetails.getImgSrc());
-            
+
             product.setUpdatedAt(LocalDateTime.now());
             Product updatedProduct = productRepository.save(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
@@ -108,6 +109,44 @@ public class ProductResource {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/products/search")
+    public List<Product> searchAndFilterProducts(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double price_min,
+            @RequestParam(required = false) Double price_max) {
+
+        List<Product> products = productRepository.findAll();
+
+        if (q != null && !q.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> product.getName().toLowerCase().contains(q.toLowerCase()) ||
+                            product.getDescription().toLowerCase().contains(q.toLowerCase()))
+                    .toList();
+        }
+
+        if (category != null && !category.isEmpty()) {
+            products = products.stream()
+                    .filter(product -> product.getCategory() != null &&
+                            product.getCategory().getName().equalsIgnoreCase(category))
+                    .toList();
+        }
+
+        if (price_min != null) {
+            products = products.stream()
+                    .filter(product -> product.getPrice() >= price_min)
+                    .toList();
+        }
+
+        if (price_max != null) {
+            products = products.stream()
+                    .filter(product -> product.getPrice() <= price_max)
+                    .toList();
+        }
+
+        return products;
     }
 
 }

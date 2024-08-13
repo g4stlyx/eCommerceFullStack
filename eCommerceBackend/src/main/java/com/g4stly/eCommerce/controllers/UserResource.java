@@ -54,22 +54,22 @@ public class UserResource {
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         System.out.println("Received user: " + user);
-    
+
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-    
+
         if (!violations.isEmpty()) {
             for (ConstraintViolation<User> violation : violations) {
                 System.out.println("Violation: " + violation.getMessage());
             }
             return new ResponseEntity<>("Password does not meet the criteria", HttpStatus.BAD_REQUEST);
         }
-    
+
         try {
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashedPassword);
-    
+
             User savedUser = userRepository.save(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
@@ -83,24 +83,23 @@ public class UserResource {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody User user) {
-    
+
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
-    
+
         if (!violations.isEmpty()) {
             for (ConstraintViolation<User> violation : violations) {
                 System.out.println("Violation: " + violation.getMessage());
             }
             return new ResponseEntity<>("Password does not meet the criteria", HttpStatus.BAD_REQUEST);
         }
-    
+
         try {
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashedPassword);
-            
-            user.setAdmin(false); //! to prevent users to create admins
-    
+            user.setAdmin(false);
+
             User savedUser = userRepository.save(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
@@ -115,16 +114,31 @@ public class UserResource {
     @PutMapping("/users/{username}")
     public ResponseEntity<?> updateUser(@PathVariable String username, @Valid @RequestBody User userDetails) {
         try {
-            User user = userRepository.findByUsername(username)
+            String usernameWhoUpdate = SecurityContextHolder.getContext().getAuthentication().getName();
+            User userWhoUpdate = userRepository.findByUsername(usernameWhoUpdate)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            user.setAdmin(userDetails.isAdmin());
+
+            User usertoUpdate = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            usertoUpdate.setEmail(userDetails.getEmail());
+            usertoUpdate.setPhoneNumber(userDetails.getPhoneNumber());
+            usertoUpdate.setAddress(userDetails.getAddress());
+
+            if(userWhoUpdate.isAdmin()){
+                usertoUpdate.setAdmin(userDetails.isAdmin());
+            }
+
             String hashedPassword = passwordEncoder.encode(userDetails.getPassword());
-            user.setPassword(hashedPassword);
-            User updatedUser = userRepository.save(user);
+            usertoUpdate.setPassword(hashedPassword);
+            User updatedUser = userRepository.save(usertoUpdate);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
-        } catch (Exception e) {
+        }
+        // ! username değiştirilemiyor, bu yüzden tekrar kontrole gerek yok
+        // catch (DataIntegrityViolationException e) {
+        // return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+        // }
+        catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -133,6 +147,15 @@ public class UserResource {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteById(@PathVariable int id) {
         try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (!user.isAdmin()) {
+                return new ResponseEntity<>("You are not authorized to view this resource: deleting user by id " + id,
+                        HttpStatus.UNAUTHORIZED);
+            }
+
             userRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -142,16 +165,16 @@ public class UserResource {
     }
 
     @GetMapping("/users/{username}/orders")
-    public ResponseEntity<?> getOrdersByUsername(@PathVariable String username){
-        try{
+    public ResponseEntity<?> getOrdersByUsername(@PathVariable String username) {
+        try {
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-            if(!username.equals(currentUsername) && !user.isAdmin()){
+            if (!username.equals(currentUsername) && !user.isAdmin()) {
                 return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(user.getOrders(), HttpStatus.OK);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

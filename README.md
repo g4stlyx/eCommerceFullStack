@@ -3,8 +3,8 @@
 
 ## Techonologies
     - [ ] React (+React Router, Bootstrap, Axios, Formik, Material UI?...) 
-    - [ ] Java Spring Boot(+Spring Security, Spring Data JPA...)
-    - [ ] MySQL, AWS
+    - [x] Java Spring Boot(+Spring Security, Spring Data JPA...)
+    - [x] MySQL, AWS
     - [ ] JUnit, Jest
     - [ ] Swagger
     - [ ] Typescript?
@@ -35,9 +35,7 @@
 yeah doesnt seem easy
 
     /
-    [ ] POST /login                                         (frontend, will use /authenticate)  #only if no tokens
-    [x] POST /signup                                        #only if no tokens
-    [ ] POST /logout                                        (frontend, will remove the token)   #only if logged in
+    [x] POST /signup
 
     /products
     [x] GET /                                               get all products
@@ -45,14 +43,13 @@ yeah doesnt seem easy
     [x] POST /                                              create product                      #only admins
     [x] PUT /$id                                            update product by id                #only admins
     [x] DELETE /$id                                         delete product by id                #only admins
-    [?] GET /search?q=                                      Search products by query.
-    [?] GET /filter?category=&price_min=&price_max=         Filter products.
+    [x] GET /search?q=&category=&price_min=&price_max=      filtering and searching products.
 
     [x] GET /{id}/reviews                                   Get reviews for a product.
     [x] GET /{id}/reviews/${review_id}                      Get a specific review
     [x] POST /{id}/reviews                                  Add a review for a product.
-    [x] PUT /{id}/reviews/${review_id}                      Update a review.
-    [x] DELETE /{id}/reviews/${review_id}                   Delete a review.
+    [x] PUT /{id}/reviews/${review_id}                      Update a review.                    # admin or user himself only
+    [x] DELETE /{id}/reviews/${review_id}                   Delete a review.                    # admin or user himself only
 
     /categories
     [x] GET /                                               get all categories
@@ -62,20 +59,17 @@ yeah doesnt seem easy
     [x] DELETE /$id                                         delete category by id               #only admins
 
     /users
-    [x] GET /                                               get all users                       #only admins
-    [x] GET /$id                                            get user by id                      only show the current user
+    [x] GET /                                               get all users                       
+    [x] GET /$id                                            get user by id                      
     [x] POST /                                              create user                         #only admins
     [x] PUT /$id                                            update user by id                   #only admins
     [x] DELETE /$id                                         delete user by id                   #only admins
     [x] GET /{username}/orders                              Get orders for the current user.
-    [?] POST /forgot-password
-    [?] POST /reset-password
 
     /orders
-    [x] GET /                                               get all orders                      #only admins
+    [x] GET /                                               get all orders                     #only admins
     [x] GET /{id}                                           get order by id
     ![x] POST /                                             create order                       # there are things to change
-    [?] POST /{id}                                          update order by id                  # do we realy need this? it may be open to admins only, otherwise users shouldnt be able to update orders normally
     [x] POST /{id}/cancel                                   Cancel an order.
 
     /cart

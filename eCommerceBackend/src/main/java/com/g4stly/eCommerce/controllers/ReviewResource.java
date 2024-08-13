@@ -89,18 +89,22 @@ public class ReviewResource {
     public ResponseEntity<?> updateReview(@PathVariable Integer product_id, @PathVariable Integer review_id,
             @RequestBody Review reviewDetails) {
         try {
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
             Review review = reviewRepository.findById(review_id)
                     .orElseThrow(() -> new RuntimeException("Review not found"));
+
+            if(!currentUser.isAdmin() && !review.getUser().getUsername().equals(currentUsername)){
+                return new ResponseEntity<>("Unauthorized to update this review", HttpStatus.UNAUTHORIZED);
+            }
+
             review.setTitle(reviewDetails.getTitle());
             review.setText(reviewDetails.getText());
             review.setRating(reviewDetails.getRating());
-
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            review.setUser(user);
-            
             review.setUpdatedAt(LocalDateTime.now());
+
             Review updatedReview = reviewRepository.save(review);
             return new ResponseEntity<>(updatedReview, HttpStatus.OK);
         } catch (Exception e) {
@@ -112,11 +116,19 @@ public class ReviewResource {
     @DeleteMapping("/products/{product_id}/reviews/{review_id}")
     public ResponseEntity<?> deleteReview(@PathVariable Integer product_id, @PathVariable Integer review_id) {
         try {
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
             Review review = reviewRepository.findById(review_id)
                     .orElseThrow(() -> new RuntimeException("Review not found"));
 
             if (!review.getProduct().getId().equals(product_id)) {
                 return new ResponseEntity<>("Review does not belong to the specified product", HttpStatus.BAD_REQUEST);
+            }
+
+            if(!currentUser.isAdmin() && !review.getUser().getUsername().equals(currentUsername)){
+                return new ResponseEntity<>("Unauthorized to delete this review", HttpStatus.UNAUTHORIZED);
             }
 
             reviewRepository.deleteById(review_id);
