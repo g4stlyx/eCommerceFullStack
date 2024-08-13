@@ -32,8 +32,8 @@ public class CategoryResource {
     }
 
     @GetMapping("/categories")
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public ResponseEntity<?> getAllCategories() {
+        return new ResponseEntity<>(categoryRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/categories/{category_id}")
