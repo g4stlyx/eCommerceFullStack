@@ -62,7 +62,8 @@ class UserResourceTest {
     @Test
     void testCreateUser_ValidUser() {
         User user = new User();
-        user.setPassword("password");
+        user.setUsername("usernameValid");
+        user.setPassword("passwordQ-123");
 
         when(passwordEncoder.encode(user.getPassword())).thenReturn("hashedPassword");
         when(userRepository.save(user)).thenReturn(user);
@@ -76,7 +77,8 @@ class UserResourceTest {
     @Test
     void testCreateUser_UsernameExists() {
         User user = new User();
-        user.setPassword("password");
+        user.setUsername("usernameValid");
+        user.setPassword("passwordQ-123");
 
         when(passwordEncoder.encode(user.getPassword())).thenReturn("hashedPassword");
         when(userRepository.save(user)).thenThrow(new DataIntegrityViolationException("Username already exists"));
@@ -89,7 +91,8 @@ class UserResourceTest {
     @Test
     void testSignup_ValidUser() {
         User user = new User();
-        user.setPassword("password");
+        user.setUsername("usernameValid");
+        user.setPassword("passwordQ-123");
 
         when(passwordEncoder.encode(user.getPassword())).thenReturn("hashedPassword");
         when(userRepository.save(user)).thenReturn(user);

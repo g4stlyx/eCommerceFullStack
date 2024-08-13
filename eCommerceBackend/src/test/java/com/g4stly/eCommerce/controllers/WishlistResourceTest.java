@@ -1,5 +1,6 @@
 package com.g4stly.eCommerce.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +26,8 @@ import com.g4stly.eCommerce.repositories.UserRepository;
 import com.g4stly.eCommerce.repositories.WishlistItemRepository;
 import com.g4stly.eCommerce.repositories.WishlistRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -194,6 +197,8 @@ public class WishlistResourceTest {
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
         Wishlist wishlist = new Wishlist();
+        List<WishlistItem> wishlistItems = new ArrayList<>();
+        wishlist.setWishlistItems(wishlistItems);
         when(wishlistRepository.findByUser(user)).thenReturn(Optional.of(wishlist));
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {

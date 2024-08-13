@@ -21,9 +21,13 @@ import com.g4stly.eCommerce.repositories.CartRepository;
 import com.g4stly.eCommerce.repositories.OrderRepository;
 import com.g4stly.eCommerce.repositories.ProductRepository;
 import com.g4stly.eCommerce.repositories.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CartResourceTest {
@@ -84,10 +88,11 @@ class CartResourceTest {
     @Test
     void testGetCartById_Success() {
         User user = new User();
+        user.setUsername("usernameValid1");
         Cart cart = new Cart();
         cart.setUser(user);
-        when(authentication.getName()).thenReturn("username");
-        when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        when(authentication.getName()).thenReturn("usernameValid1");
+        when(userRepository.findByUsername("usernameValid1")).thenReturn(Optional.of(user));
         when(cartRepository.findById(1)).thenReturn(Optional.of(cart));
 
         ResponseEntity<?> response = cartResource.getCartById(1);
@@ -98,11 +103,14 @@ class CartResourceTest {
 
     @Test
     void testGetCartById_Unauthorized() {
-        User user = new User();
+        User user1 = new User();
+        user1.setUsername("usernameValid1");
+        User user2 = new User();
+        user2.setUsername("usernameValid2");
         Cart cart = new Cart();
-        cart.setUser(new User()); // different user
-        when(authentication.getName()).thenReturn("username");
-        when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        cart.setUser(user2); // different user
+        when(authentication.getName()).thenReturn("usernameValid1");
+        when(userRepository.findByUsername("usernameValid1")).thenReturn(Optional.of(user1));
         when(cartRepository.findById(1)).thenReturn(Optional.of(cart));
 
         ResponseEntity<?> response = cartResource.getCartById(1);
@@ -114,11 +122,14 @@ class CartResourceTest {
     @Test
     void testAddItemToCart_Success() {
         User user = new User();
+        user.setUsername("usernameValid1");
         Product product = new Product();
         Cart cart = new Cart();
+        cart.setCartItems(new ArrayList<>());
+        cart.setUser(user);
         CartItem cartItem = new CartItem();
-        when(authentication.getName()).thenReturn("username");
-        when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        when(authentication.getName()).thenReturn("usernameValid1");
+        when(userRepository.findByUsername("usernameValid1")).thenReturn(Optional.of(user));
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
         when(cartRepository.findByUser(user)).thenReturn(Optional.of(cart));
         when(cartItemRepository.save(any(CartItem.class))).thenReturn(cartItem);
@@ -134,7 +145,9 @@ class CartResourceTest {
     @Test
     void testRemoveItemFromCart_Success() {
         User user = new User();
+        user.setUsername("usernameValid1");
         Cart cart = new Cart();
+        cart.setCartItems(new ArrayList<>());
         CartItem cartItem = new CartItem();
         cartItem.setId(1);
         cart.getCartItems().add(cartItem);
@@ -152,10 +165,15 @@ class CartResourceTest {
     @Test
     void testUpdateCartItemQuantity_Success() {
         User user = new User();
+        user.setUsername("usernameValid1");
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart.setCartItems(new ArrayList<>());
         CartItem cartItem = new CartItem();
         cartItem.setId(1);
-        when(authentication.getName()).thenReturn("username");
-        when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        cart.getCartItems().add(cartItem);
+        when(authentication.getName()).thenReturn("usernameValid1");
+        when(userRepository.findByUsername("usernameValid1")).thenReturn(Optional.of(user));
         when(cartItemRepository.findById(1)).thenReturn(Optional.of(cartItem));
 
         ResponseEntity<?> response = cartResource.updateCartItemQuantity(1, 5);
@@ -168,7 +186,10 @@ class CartResourceTest {
     @Test
     void testCreateOrderFromCart_Success() {
         User user = new User();
+        user.setUsername("usernameValid1");
         Cart cart = new Cart();
+        cart.setCartItems(new ArrayList<>());
+        cart.setUser(user);
         Product product = new Product();
         product.setPrice(100);
         CartItem cartItem = new CartItem();
