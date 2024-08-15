@@ -101,6 +101,7 @@ public class WishlistResourceTest {
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
 
         Wishlist wishlist = new Wishlist();
+        wishlist.setWishlistItems(new ArrayList<WishlistItem>());
         when(wishlistRepository.findByUser(user)).thenReturn(Optional.of(wishlist));
 
         ResponseEntity<?> response = wishlistResource.addItemToWishlist(1);
@@ -125,6 +126,7 @@ public class WishlistResourceTest {
 
         Wishlist wishlist = new Wishlist();
         WishlistItem existingItem = new WishlistItem();
+        wishlist.setWishlistItems(new ArrayList<WishlistItem>());
         existingItem.setProduct(product);
         wishlist.getWishlistItems().add(existingItem);
         when(wishlistRepository.findByUser(user)).thenReturn(Optional.of(wishlist));
@@ -178,6 +180,7 @@ public class WishlistResourceTest {
 
         Wishlist wishlist = new Wishlist();
         WishlistItem item = new WishlistItem();
+        wishlist.setWishlistItems(new ArrayList<WishlistItem>());
         item.setId(1);
         wishlist.getWishlistItems().add(item);
         when(wishlistRepository.findByUser(user)).thenReturn(Optional.of(wishlist));

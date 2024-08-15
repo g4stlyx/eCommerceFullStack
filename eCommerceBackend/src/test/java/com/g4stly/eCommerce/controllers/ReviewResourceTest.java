@@ -120,6 +120,7 @@ class ReviewResourceTest {
         Review existingReview = new Review();
         User mockUser = new User();
         mockUser.setUsername("anotherUser");
+        existingReview.setUser(mockUser);
 
         when(authentication.getName()).thenReturn("testUser");
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(mockUser));
@@ -142,6 +143,7 @@ class ReviewResourceTest {
 
         User mockUser = new User();
         mockUser.setUsername("anotherUser");
+        mockReview.setUser(mockUser);
 
         when(authentication.getName()).thenReturn("testUser");
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(mockUser));
