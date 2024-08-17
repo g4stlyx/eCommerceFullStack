@@ -1,35 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Route, Routes } from 'react-router-dom';
 import './App.css'
+import Header from './components/Header';
+import Login from './components/Login';
+import NonAuthenticatedRoute from './components/security/NonAuthenticatedRoute';
+import SignUp from './components/SignUp';
+import AuthenticatedRoute from './components/security/AuthenticatedRoute';
+import Logout from './components/Logout';
+import Error from './components/Error';
+// import AdminRoute from './components/security/AdminRoute';
+import Footer from './components/Footer';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App : React.FC = () => {
   return (
-    <>
+    <div className="App">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <NonAuthenticatedRoute>
+                <Login />
+              </NonAuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <NonAuthenticatedRoute>
+                <Login />
+              </NonAuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/sign-up"
+            element={
+              <NonAuthenticatedRoute>
+                <SignUp />
+              </NonAuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/logout"
+            element={
+              <AuthenticatedRoute>
+                <Logout />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/not-authorized"
+            element={
+              <Error
+                message="You are NOT AUTHORIZED to see this page."
+                status={403}
+              />
+            }
+          />
+          <Route
+            path="/bad-request"
+            element={
+              <Error
+                message="BAD REQUEST, you couldn't give what system wants :("
+                status={400}
+              />
+            }
+          />
+          <Route
+            path="/server-error"
+            element={<Error message="It's not you it's us :(" status={500} />}
+          />
+          <Route
+            path="*"
+            element={
+              <Error
+                message="The page you want to reach NOT FOUND."
+                status={404}
+              />
+            }
+          />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <Footer />
+    </div>
+  );
 }
 
 export default App

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {useAuth} from "./security/AuthContext";
 import React from "react";
 
-export default function Login(){
+const Login: React.FC = () => {
 
     const [username, setUsername] = useState("g4stly");
     const [password, setPassword] = useState("");
@@ -58,3 +58,4 @@ export default function Login(){
 
 }
 
+export default Login;

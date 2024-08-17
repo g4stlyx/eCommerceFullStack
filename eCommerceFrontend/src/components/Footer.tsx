@@ -1,53 +1,50 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 
-export default function Footer() {
-    return (
-        <footer className="footer">
-            <Container>
-                <Row>
-                    <Col md="4">
-                        <h5>About Us</h5>
-                        <p>
-                            We are a team of passionate developers building web applications
-                            to solve real-world problems. Follow us on social media to stay updated.
-                        </p>
-                    </Col>
-                    <Col md="4">
-                        <h5>Links</h5>
-                        <ul className="list-unstyled">
-                            <li><a href="/home" className="text-white">Home</a></li>
-                            <li><a href="/about" className="text-white">About</a></li>
-                            <li><a href="/contact" className="text-white">Contact</a></li>
-                            <li><a href="/faq" className="text-white">FAQ</a></li>
-                        </ul>
-                    </Col>
-                    <Col md="4" className="text-center">
-                        <h5>Follow Us</h5>
-                        <div className="d-flex justify-content-center">
-                            <a href="https://facebook.com" className="text-white me-3">
-                                <FaFacebook size={24} />
-                            </a>
-                            <a href="https://twitter.com" className="text-white me-3">
-                                <FaTwitter size={24} />
-                            </a>
-                            <a href="https://instagram.com" className="text-white me-3">
-                                <FaInstagram size={24} />
-                            </a>
-                            <a href="https://linkedin.com" className="text-white">
-                                <FaLinkedin size={24} />
-                            </a>
-                        </div>
-                    </Col>
-                </Row>
-                <Row className="mt-4">
-                    <Col className="text-center">
-                        <hr className="bg-white" />
-                        <p className="mb-0">© 2024 gSoftw4re. All rights reserved.</p>
-                    </Col>
-                </Row>
-            </Container>
-        </footer>
-    );
-}
+const Footer : React.FC = () => {
+  return (
+    <footer className="bg-dark text-white mt-5 p-4 text-center">
+      <Container>
+        <Row>
+          <Col md={4} className="mb-3">
+            <h5>About Us</h5>
+            <p>
+              Your one-stop shop for all your shopping needs. Explore our wide range of products and categories.
+            </p>
+          </Col>
+          <Col md={4} className="mb-3">
+            <h5>Quick Links</h5>
+            <ul className="list-unstyled">
+              <li><a href="/products" className="text-white">Products</a></li>
+              <li><a href="/wishlist" className="text-white">Wishlist</a></li>
+              <li><a href="/cart" className="text-white">Cart</a></li>
+              <li><a href="/account" className="text-white">Account</a></li>
+            </ul>
+          </Col>
+          <Col md={4} className="mb-3">
+            <h5>Follow Us</h5>
+            <div>
+              <a href="https://facebook.com" className="text-white me-3">
+                <FaFacebook size={30} />
+              </a>
+              <a href="https://twitter.com" className="text-white me-3">
+                <FaTwitter size={30} />
+              </a>
+              <a href="https://instagram.com/sefa.js" className="text-white">
+                <FaInstagram size={30} />
+              </a>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="mt-3">
+            <p className="mb-0">&copy; {new Date().getFullYear()} E-Commerce. All rights reserved.</p>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
+  );
+};
+
+export default Footer;

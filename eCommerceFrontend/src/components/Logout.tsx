@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Logout(){
+const Logout:React.FC = () => {
     return(
         <div className="Logout">
             <h1>You are logged out!</h1>
@@ -8,3 +8,5 @@ export default function Logout(){
         </div>
     )
 }
+
+export default Logout;

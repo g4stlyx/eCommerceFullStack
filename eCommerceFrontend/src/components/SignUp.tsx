@@ -5,13 +5,13 @@ import { signupApi } from "./api/UserApiService";
 import { useNavigate } from "react-router-dom";
 import { SignUpFormValues } from "../types/types";
 
-export default function SignUp() {
+const SignUp : React.FC = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const initialValues = {
     username: "",
     password: "",
-    admin: false
+    isAdmin: false
   };
 
   const validationSchema = Yup.object().shape({
@@ -49,7 +49,7 @@ export default function SignUp() {
     const userPayload = {
       username: values.username,
       password: values.password,
-      admin: "false",
+      isAdmin: false,
     };
 
     signupApi(userPayload)
@@ -145,3 +145,5 @@ export default function SignUp() {
     </div>
   );
 }
+
+export default SignUp;
