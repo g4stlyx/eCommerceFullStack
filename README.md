@@ -5,9 +5,9 @@
     - [ ] React (+React Router, Bootstrap, Axios, Formik, Material UI?...) 
     - [x] Java Spring Boot(+Spring Security, Spring Data JPA...)
     - [x] MySQL, AWS
-    - [ ] JUnit, Jest
-    - [ ] Swagger
-    - [ ] Typescript?
+    - [/] JUnit, Jest
+    - [x] Swagger
+    - [ ] Typescript
 
 ## How to Run/Use the App
     *first of all, you have to have a mysql database for everything to function properly.
@@ -16,6 +16,7 @@
     -----
 
     * to run the api, open backend folder as a Java Maven project:
+        * OPTIONAL: if you want to run the tests first run `mvn test`
         * run `mvn spring-boot:run` in terminal or
         * simply compile and run the java app from your IDE
     
