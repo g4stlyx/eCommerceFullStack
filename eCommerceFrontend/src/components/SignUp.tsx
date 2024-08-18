@@ -61,7 +61,7 @@ const SignUp : React.FC = () => {
           navigate("/login");
         }, 2000);
       })
-      .catch((error:any) => {
+      .catch((error) => {
         if (error.response.status === 409) {
           setMessage("A user with that username already exists.");
         } else if (error.response.status === 400) {
@@ -95,7 +95,7 @@ const SignUp : React.FC = () => {
           onSubmit={onSubmit}
         >
           {({ isSubmitting }) => (
-            <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Form>
               <fieldset className="form-group" style={{ textAlign: "center" }}>
                 <label htmlFor="username">Username</label>
                 <Field

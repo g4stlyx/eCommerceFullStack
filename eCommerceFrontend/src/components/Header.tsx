@@ -1,9 +1,11 @@
 import React from 'react';
+import "../styles/header.css"
+import "../styles/App.css"
 import { Navbar, Nav, Container, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 
 const Header : React.FC = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top" className='header'>
       <Container>
         <Navbar.Brand href="/">E-Commerce</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -4,7 +4,7 @@ export const executeJwtAuthenticationService = async (username:string, password:
     try {
         const response = await apiClient.post("/authenticate", {username, password});
         return response;
-    } catch (error:any) {
+    } catch (error : any) {
         if (error.response) {
             console.error('Error response:', error.response.data);
             console.error('Error status:', error.response.status);

@@ -42,10 +42,17 @@ export interface User{
     email:string | null;
     phoneNumber: string | null;
     address: string | null;
-    orders: Order[];
-    reviews: Review[];
-    cart: Cart;
-    wishlist: Wishlist;
+    //! should these have a choice to be null?
+    orders: Order[] | null; 
+    reviews: Review[] | null;
+    cart: Cart | null;
+    wishlist: Wishlist | null;
+}
+
+export interface UserSignUp{
+    username: string;
+    password: string;
+    isAdmin: boolean;
 }
 
 export interface Product{

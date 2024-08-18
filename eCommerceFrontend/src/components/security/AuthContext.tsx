@@ -84,6 +84,7 @@ const AuthProvider: React.FC<AuthenticationRouteProps> = ({ children }) => {
     setToken(null);
     setUsername(null);
     sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
   }
 
   const valueToBeShared: AuthContextType = {

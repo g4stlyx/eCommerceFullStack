@@ -19,8 +19,7 @@ export default function NonAuthenticatedRoute({ children } : AuthenticationRoute
         const currentTime = Date.now() / 1000;
   
         if (decodedToken.exp > currentTime) {
-            const username = decodedToken.sub;
-            navigate(`/welcome/${username}`)
+            navigate(`/`);
             setIsLoading(false);
         } else{
             setIsLoading(false);

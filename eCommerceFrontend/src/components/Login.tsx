@@ -1,4 +1,3 @@
-import "../styles/todoApp.css"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "./security/AuthContext";
@@ -24,7 +23,7 @@ const Login: React.FC = () => {
 
     async function handleSubmit(){
         if(await authContext.login(username,password)){
-            navigate(`/welcome/${username}`);
+            navigate(`/`);
         }
         else{
             setShowErrorMessage(true);
