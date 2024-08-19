@@ -70,7 +70,7 @@ const App: React.FC = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/categories/:categoryId/products" element={<ProductsByCategory />} />
-          <Route path="/search" element={<ProductsBySearch />} />
+          <Route path="/products/search" element={<ProductsBySearch />} />
           <Route path="/products/:productId" element={<ProductDetailed />} />
           //! Non-Logged User Routes
           <Route

@@ -13,28 +13,40 @@ import {
 import { useAuth } from "./security/AuthContext";
 import { FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const authContext = useAuth();
   const isAuthenticated = authContext.isAuthenticated;
   const [categories, setCategories] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
       getAllCategoriesApi()
-      .then((response) => {
-        console.log("API Response:", response);
-        if (Array.isArray(response.data)) {
-          setCategories(response.data);
-        } else {
-          console.error("Expected an array but got:", response.data);
-        }
-      })
-      .catch((err) => console.log(err));
+        .then((response) => {
+          console.log("API Response:", response);
+          if (Array.isArray(response.data)) {
+            setCategories(response.data);
+          } else {
+            console.error("Expected an array but got:", response.data);
+          }
+        })
+        .catch((err) => console.log(err));
     };
 
     fetchCategories();
   }, []);
+
+  const search = (formEvent: React.FormEvent) => {
+    formEvent.preventDefault();
+    try {
+      navigate("/products/search?q=" + searchQuery);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Navbar
@@ -49,10 +61,13 @@ const Header: React.FC = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-          <NavDropdown title="Kategoriler" id="basic-nav-dropdown">
+            <NavDropdown title="Kategoriler" id="basic-nav-dropdown">
               {categories.length > 0 ? (
                 categories.map((category) => (
-                  <NavDropdown.Item key={category} href={`/categories/${category}`}>
+                  <NavDropdown.Item
+                    key={category}
+                    href={`/categories/${category}`}
+                  >
                     {category}
                   </NavDropdown.Item>
                 ))
@@ -61,15 +76,19 @@ const Header: React.FC = () => {
               )}
             </NavDropdown>
           </Nav>
-          <Form className="d-flex flex-grow-1" style={{margin:"0 30px"}}>
+          <Form className="d-flex flex-grow-1" style={{ margin: "0 30px" }} onSubmit={search}>
             <FormControl
               type="search"
               placeholder="Ara.."
               className="me-2"
               aria-label="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               style={{ borderRadius: "10px" }}
             />
-            <Button variant="outline-success">Ara</Button>
+            <Button variant="outline-success" onClick={search}>
+              Ara
+            </Button>
           </Form>
           <Nav className="ms-auto">
             <Nav.Link href="/cart">
