@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "./security/AuthContext";
 import React from "react";
+import "../styles/login.css"
 
 const Login: React.FC = () => {
 
@@ -32,7 +33,9 @@ const Login: React.FC = () => {
 
     return(
         <div className="Login">
+            <br />
             <h1>Please login to continue.</h1>
+            <br />
             {showErrorMessage && <div className="errorMessage">Authentication Failed! Please check your credentials.</div>}
             <div className="loginForm">
                 <div>
@@ -49,6 +52,9 @@ const Login: React.FC = () => {
                 <br />
                 <div>
                     Dont't you have an account? <a href="/sign-up">Sign Up.</a>
+                </div>
+                <div>
+                <a href="/forgot-password" style={{fontSize:"15px"}}>Forgot your password? </a>
                 </div>
             </div>
             <br />

@@ -10,22 +10,22 @@ const Footer : React.FC = () => {
       <Container>
         <Row>
           <Col md={4} className="mb-3">
-            <h5>About Us</h5>
+            <h5>Hakkımızda</h5>
             <p>
-              Your one-stop shop for all your shopping needs. Explore our wide range of products and categories.
+              güzel ürünler satıyoruz
             </p>
           </Col>
           <Col md={4} className="mb-3">
-            <h5>Quick Links</h5>
+            <h5>Hızlı Linkler</h5>
             <ul className="list-unstyled">
-              <li><a href="/products" className="text-white">Products</a></li>
-              <li><a href="/wishlist" className="text-white">Wishlist</a></li>
-              <li><a href="/cart" className="text-white">Cart</a></li>
-              <li><a href="/account" className="text-white">Account</a></li>
+              <li><a href="/products" className="text-white">Ürünler</a></li>
+              <li><a href="/wishlist" className="text-white">Favorilerim</a></li>
+              <li><a href="/cart" className="text-white">Sepetim</a></li>
+              <li><a href="/account" className="text-white">Hesabım</a></li>
             </ul>
           </Col>
           <Col md={4} className="mb-3">
-            <h5>Follow Us</h5>
+            <h5>Bizi Takip Edin</h5>
             <div>
               <a href="https://facebook.com" className="text-white me-3">
                 <FaFacebook size={30} />
@@ -41,7 +41,7 @@ const Footer : React.FC = () => {
         </Row>
         <Row>
           <Col className="mt-3">
-            <p className="mb-0">&copy; {new Date().getFullYear()} E-Commerce. All rights reserved.</p>
+            <p className="mb-0">&copy; {new Date().getFullYear()} g-commerce. All rights reserved.</p>
           </Col>
         </Row>
       </Container>

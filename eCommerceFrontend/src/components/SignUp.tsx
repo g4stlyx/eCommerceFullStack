@@ -86,7 +86,9 @@ const SignUp : React.FC = () => {
 
   return (
     <div className="container">
+      <br />
       <h2>Sign Up</h2>
+      <br />
       {message && <div className="alert alert-info">{message}</div>}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Formik
