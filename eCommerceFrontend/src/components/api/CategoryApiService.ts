@@ -34,7 +34,7 @@ export const updateCategoryApi = (categoryId: number, category: Category) => {
 };
 
 export const deleteCategoryApi = (categoryId: number) => {
-  apiClient.delete(`/categories/${categoryId}`).catch((error) => {
+  return apiClient.delete(`/categories/${categoryId}`).catch((error) => {
     if (error.response.status === 403) {
       throw new Error("You are not authorized to delete a category.");
     } else {
