@@ -7,7 +7,6 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,7 +27,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -45,6 +43,9 @@ public class JwtSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/authenticate").permitAll()
                         .requestMatchers("/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories", "/categories/{category_id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products", "/products/{product_id}", "/products/search").permitAll() 
+                        .requestMatchers(HttpMethod.GET, "/products/{product_id}/reviews", "/products/{product_id}/reviews/{review_id}").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

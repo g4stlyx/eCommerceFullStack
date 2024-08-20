@@ -14,11 +14,12 @@ import { useAuth } from "./security/AuthContext";
 import { FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
 import { useNavigate } from "react-router-dom";
+import { Category } from "../types/types";
 
 const Header: React.FC = () => {
   const authContext = useAuth();
   const isAuthenticated = authContext.isAuthenticated;
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
 
@@ -35,7 +36,6 @@ const Header: React.FC = () => {
         })
         .catch((err) => console.log(err));
     };
-
     fetchCategories();
   }, []);
 
@@ -64,11 +64,12 @@ const Header: React.FC = () => {
             <NavDropdown title="Kategoriler" id="basic-nav-dropdown">
               {categories.length > 0 ? (
                 categories.map((category) => (
+
                   <NavDropdown.Item
-                    key={category}
-                    href={`/categories/${category}`}
+                    key={category.id}
+                    href={`/categories/${category.name}`}
                   >
-                    {category}
+                    {category.name}
                   </NavDropdown.Item>
                 ))
               ) : (

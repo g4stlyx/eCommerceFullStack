@@ -63,7 +63,7 @@ export interface Product{
     price: number;
     createdAt: Date;
     updatedAt: Date;
-    imgSrc: string | null;
+    imgSrc: string | undefined;
     category: Category;
 }
 
@@ -71,7 +71,7 @@ export interface Category{
     id: number;
     name: string;
     description: string;
-    imgSrc: string | null;
+    imgSrc: string | undefined;
     products: Product[];
 }
 

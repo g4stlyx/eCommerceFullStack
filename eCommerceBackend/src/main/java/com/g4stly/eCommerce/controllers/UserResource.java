@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 @RestController
+@CrossOrigin("http://localhost:5173")
 public class UserResource {
 
     private UserRepository userRepository;
