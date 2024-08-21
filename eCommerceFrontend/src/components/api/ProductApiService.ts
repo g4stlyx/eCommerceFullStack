@@ -14,7 +14,7 @@ export const getProductByIdApi = (productId: number) => {
 };
 
 export const createProductApi = (product: Product) => {
-  return apiClient.post("/products/", product).catch((error) => {
+  return apiClient.post("/products", product).catch((error) => {
     if (error.response.status === 403) {
       throw new Error("You are not authorized to create a product.");
     } else {

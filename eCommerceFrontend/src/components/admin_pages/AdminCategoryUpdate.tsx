@@ -1,96 +1,113 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  getAllCategoriesApi,
-  deleteCategoryApi,
-} from "../api/CategoryApiService";
-import { Button, Table } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getCategoryByIdApi, createCategoryApi, updateCategoryApi } from "../api/CategoryApiService";
+import { Form, Button } from "react-bootstrap";
 import { Category } from "../../types/types";
 
-const AdminCategories: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+const AdminCategoryUpdate: React.FC = () => {
+  const [category, setCategory] = useState<Category>({
+    id: -1,
+    name: "",
+    description: "",
+    imgSrc: "",
+    products: []
+  });
+  const { category_id } = useParams<{ category_id: string }>();
   const navigate = useNavigate();
 
+  const isEditing = category_id !== "-1";
+
   useEffect(() => {
-    getAllCategories();
-  }, []);
+    if (isNaN(Number(category_id))) {
+      navigate("/not-found");
+      return;
+    }
 
-  const getAllCategories = async () => {
+    if (isEditing) {
+      fetchCategoryById(Number(category_id));
+    }
+  }, [category_id, isEditing, navigate]);
+
+  const fetchCategoryById = async (id: number) => {
     try {
-      const response = await getAllCategoriesApi();
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error fetching categories", error);
-    }
-  };
-
-  const deleteCategory = async (categoryId: number) => {
-    const confirmDelete = window.confirm("Emin Misiniz?");
-    if (confirmDelete) {
-      try {
-        await deleteCategoryApi(categoryId);
-        setCategories(
-          categories.filter((category) => category.id !== categoryId)
-        );
-      } catch (error) {
-        console.error("Error deleting category", error);
+      const response = await getCategoryByIdApi(id);
+      if (!response.data) {
+        navigate("/not-found");
+        return;
       }
+      setCategory(response.data);
+    } catch (error) {
+      console.error("Error fetching category", error);
+      navigate("/not-found");
     }
   };
 
-
-  const handleAddCategory = () => {
-    navigate("/administrator/categories/-1/edit");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCategory({ ...category, [name]: value });
   };
 
-  const handleEditCategory = (categoryId: number) => {
-    navigate(`/administrator/categories/${categoryId}/edit`);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      if (isEditing) {
+        await updateCategoryApi(category.id, category);
+      } else {
+        await createCategoryApi(category);
+      }
+      navigate("/administrator/categories");
+    } catch (error) {
+      console.error("Error submitting category", error);
+    }
   };
 
   return (
-    <div className="admin-categories-container">
-      <h2>Kategorileri Yönet</h2>
-      <Button variant="primary" onClick={handleAddCategory} className="mb-3">
-        Ekle
-      </Button>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>İsim</th>
-            <th>Açıklama</th>
-            <th>Eylemler</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((category) => (
-            <tr key={category.id}>
-              <td>{category.id}</td>
-              <td>
-                <a href={`/categories/${category.name}`} style={{textDecoration:"none"}}>{category.name}</a>
-              </td>
-              <td>{category.description}</td>
-              <td>
-                <Button
-                  variant="warning"
-                  onClick={() => handleEditCategory(category.id)}
-                  className="me-2"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => deleteCategory(category.id)}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className="admin-category-update-container">
+      <h2>{isEditing ? "Kategori Güncelle" : "Kategori Ekle"}</h2>
+      <Form onSubmit={handleSubmit} className="container">
+        <Form.Group controlId="formCategoryName" className="mb-3">
+          <Form.Label>İsim</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={category.name}
+            onChange={handleInputChange}
+            placeholder="Kategori İsmi"
+            required
+          />
+        </Form.Group>
+
+        <Form.Group controlId="formCategoryDescription" className="mb-3">
+          <Form.Label>Açıklama</Form.Label>
+          <Form.Control
+            type="text"
+            name="description"
+            value={category.description}
+            onChange={handleInputChange}
+            placeholder="Kategori Açıklaması"
+            required
+          />
+        </Form.Group>
+
+        <Form.Group controlId="formCategoryImgSrc" className="mb-3">
+          <Form.Label>Görsel URL</Form.Label>
+          <Form.Control
+            type="text"
+            name="imgSrc"
+            value={category.imgSrc}
+            onChange={handleInputChange}
+            placeholder="Görsel URL"
+            required
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          {isEditing ? "Güncelle" : "Ekle"}
+        </Button>
+      </Form>
     </div>
   );
 };
 
-export default AdminCategories;
+export default AdminCategoryUpdate;
