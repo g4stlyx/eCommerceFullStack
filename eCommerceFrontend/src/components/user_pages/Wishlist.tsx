@@ -1,5 +1,3 @@
-//! /wishlist
-
 import React from 'react'
 
 const Wishlist: React.FC = () => {

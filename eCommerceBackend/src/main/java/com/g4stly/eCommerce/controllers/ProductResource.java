@@ -92,6 +92,7 @@ public class ProductResource {
             product.setName(productDetails.getName());
             product.setDescription(productDetails.getDescription());
             product.setImgSrc(productDetails.getImgSrc());
+            product.setPrice(productDetails.getPrice());
 
             product.setUpdatedAt(LocalDateTime.now());
             Product updatedProduct = productRepository.save(product);

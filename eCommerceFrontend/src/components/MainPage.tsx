@@ -57,7 +57,6 @@ const MainPage: React.FC = () => {
 
         {/* Product Grid */}
         <Col md={9}>
-          <h4 className="mb-4">Products</h4>
           <Row xs={1} md={3} className="g-4">
             {products.map((product) => (
               <Col key={product.id}>

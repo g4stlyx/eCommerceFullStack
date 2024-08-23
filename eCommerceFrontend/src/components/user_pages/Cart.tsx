@@ -1,5 +1,3 @@
-//! /cart    
-
 import React from 'react'
 
 const Cart: React.FC = () => {

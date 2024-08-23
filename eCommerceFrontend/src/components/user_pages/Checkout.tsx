@@ -1,5 +1,3 @@
-//! /checkout 
-
 import React from 'react'
 
 const Checkout: React.FC = () => {

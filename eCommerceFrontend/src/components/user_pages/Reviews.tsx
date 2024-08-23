@@ -1,6 +1,6 @@
 import React from 'react'
 
-const OrderDetailed: React.FC = () => {
+const Reviews: React.FC = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const OrderDetailed: React.FC = () => {
   )
 }
 
-export default OrderDetailed
+export default Reviews

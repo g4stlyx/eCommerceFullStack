@@ -47,14 +47,14 @@ const AdminProductUpdate: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { // e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => { // e: React.ChangeEvent<HTMLSelectElement>
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedCategory = categories.find(category => category.id === parseInt(e.target.value));
     if (selectedCategory) {
       setProduct({
@@ -81,13 +81,13 @@ const AdminProductUpdate: React.FC = () => {
   return (
     <div>
       <br />
-      <h2>{product_id === '-1' ? 'Add Product' : 'Update Product'}</h2>
+      <h2>{product_id === '-1' ? 'Ürün Ekle' : 'Ürün Güncelle'}</h2>
       <Form onSubmit={handleSubmit} className='container'>
         <Form.Group controlId="formName">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Ürün Başlığı</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter product name"
+            placeholder="Ürün başlığını giriniz."
             name="name"
             value={product.name}
             onChange={handleChange}
@@ -95,10 +95,10 @@ const AdminProductUpdate: React.FC = () => {
           />
         </Form.Group>
         <Form.Group controlId="formDescription" className="mt-3">
-          <Form.Label>Description</Form.Label>
+          <Form.Label>Ürün Açıklaması</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter product description"
+            placeholder="Ürün açıklamasını giriniz."
             name="description"
             value={product.description}
             onChange={handleChange}
@@ -106,10 +106,10 @@ const AdminProductUpdate: React.FC = () => {
           />
         </Form.Group>
         <Form.Group controlId="formQuantity" className="mt-3">
-          <Form.Label>Quantity</Form.Label>
+          <Form.Label>Ürün Adedi</Form.Label>
           <Form.Control
             type="number"
-            placeholder="Enter product quantity"
+            placeholder="Üründen kaç adet olduğunu giriniz."
             name="quantity"
             value={product.quantity}
             onChange={handleChange}
@@ -117,11 +117,11 @@ const AdminProductUpdate: React.FC = () => {
           />
         </Form.Group>
         <Form.Group controlId="formPrice" className="mt-3">
-          <Form.Label>Price</Form.Label>
+          <Form.Label>Ürün Fiyatı</Form.Label>
           <Form.Control
             type="number"
             step="0.01"
-            placeholder="Enter product price"
+            placeholder="Ürünün fiyatını giriniz."
             name="price"
             value={product.price}
             onChange={handleChange}
@@ -129,17 +129,17 @@ const AdminProductUpdate: React.FC = () => {
           />
         </Form.Group>
         <Form.Group controlId="formImgSrc" className="mt-3">
-          <Form.Label>Image URL</Form.Label>
+          <Form.Label>Görsel URL</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter image URL"
+            placeholder="Ürüne ait görselin linkini giriniz."
             name="imgSrc"
             value={product.imgSrc}
             onChange={handleChange}
           />
         </Form.Group>
         <Form.Group controlId="formCategory" className="mt-3">
-          <Form.Label>Category</Form.Label>
+          <Form.Label>Kategori</Form.Label>
           <Form.Control as="select" value={product.category?.id || ''} onChange={handleCategoryChange} required>
             <option value="">Select Category</option>
             {categories.map((category) => (

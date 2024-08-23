@@ -28,6 +28,7 @@ import ContactUs from "./components/ContactUs";
 import ProductsByCategory from "./components/ProductsByCategory";
 import ProductsBySearch from "./components/ProductsBySearch";
 import ProductDetailed from "./components/ProductDetailed";
+import Reviews from "./components/user_pages/Reviews";
 
 const App: React.FC = () => {
   return (
@@ -115,10 +116,18 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/wishlist"
+            path="/profile/wishlist"
             element={
               <AuthenticatedRoute>
                 <Wishlist />
+              </AuthenticatedRoute>
+            }
+          />
+          <Route
+            path="/profile/reviews"
+            element={
+              <AuthenticatedRoute>
+                <Reviews />
               </AuthenticatedRoute>
             }
           />
