@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { searchAndFilterProductsApi } from "./api/ProductApiService";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
 import { Category, Product } from "../types/types";
-import { Card, Col, Form, Row, Button } from "react-bootstrap";
+import { Card, Col, Form, Row, Button, Spinner } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 const ProductsBySearch: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,6 +12,11 @@ const ProductsBySearch: React.FC = () => {
   const [category, setCategory] = useState<string>("");
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const defaultQuery = queryParams.get("q") || "";
 
   const [searchCriteria, setSearchCriteria] = useState<{
     query: string;
@@ -18,7 +24,7 @@ const ProductsBySearch: React.FC = () => {
     priceMin: number | undefined;
     priceMax: number | undefined;
   }>({
-    query: "",
+    query: defaultQuery,
     category: undefined,
     priceMin: undefined,
     priceMax: undefined,
@@ -26,19 +32,31 @@ const ProductsBySearch: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoading(true);
       try {
         const response = await getAllCategoriesApi();
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
 
+  // changes the query if smth searched by the header
+  useEffect(() => {
+    setSearchCriteria((prevCriteria) => ({
+      ...prevCriteria,
+      query: defaultQuery,
+    }));
+  }, [location.search, defaultQuery]);
+
   useEffect(() => {
     const fetchProducts = async () => {
+      setIsLoading(true); 
       try {
         const response = await searchAndFilterProductsApi({
           q: searchCriteria.query,
@@ -49,6 +67,8 @@ const ProductsBySearch: React.FC = () => {
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -61,7 +81,6 @@ const ProductsBySearch: React.FC = () => {
     const selectedCategory = e.target.value;
     setCategory(selectedCategory);
 
-    // If "Tüm Kategoriler" is selected, set category to undefined
     if (selectedCategory === "") {
       setSearchCriteria((prevCriteria) => ({
         ...prevCriteria,
@@ -137,35 +156,43 @@ const ProductsBySearch: React.FC = () => {
       </div>
 
       <div className="products-grid" style={{ margin: "25px 15px", flex: 1 }}>
-        <h5>{products.length} ürün bulundu.</h5>
+        {isLoading ? (
+          <div className="text-center">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : (
+          <>
+            <h5>{products.length} ürün bulundu.</h5>
 
-        <Row xs={1} md={3} className="g-4">
-          {products.length > 0 ? (
-            products.map((product) => (
-              <Col key={product.id}>
-                <a
-                  href={`/categories/${product.category.name}/products/${product.id}`}
-                  className="text-decoration-none"
-                >
-                  <Card className="h-100">
-                    <Card.Img
-                      variant="top"
-                      src={product.imgSrc}
-                      alt={product.name}
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
-                    <Card.Body>
-                      <Card.Title>{product.name}</Card.Title>
-                      <Card.Text>{product.price} $</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </a>
-              </Col>
-            ))
-          ) : (
-            <div>Aradığınız kritlerde ürün bulunamadı.</div>
-          )}
-        </Row>
+            <Row xs={1} md={3} className="g-4">
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <Col key={product.id}>
+                    <a
+                      href={`/categories/${product.category.name}/products/${product.id}`}
+                      className="text-decoration-none"
+                    >
+                      <Card className="h-100">
+                        <Card.Img
+                          variant="top"
+                          src={product.imgSrc}
+                          alt={product.name}
+                          style={{ height: "200px", objectFit: "cover" }}
+                        />
+                        <Card.Body>
+                          <Card.Title>{product.name}</Card.Title>
+                          <Card.Text>{product.price} $</Card.Text>
+                        </Card.Body>
+                      </Card>
+                    </a>
+                  </Col>
+                ))
+              ) : (
+                <div>Aradığınız kritlerde ürün bulunamadı.</div>
+              )}
+            </Row>
+          </>
+        )}
       </div>
     </div>
   );
