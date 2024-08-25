@@ -19,6 +19,7 @@ import { Category } from "../types/types";
 const Header: React.FC = () => {
   const authContext = useAuth();
   const isAuthenticated = authContext.isAuthenticated;
+  const isAdmin = authContext.isAdmin;
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
@@ -75,6 +76,24 @@ const Header: React.FC = () => {
             <Nav.Link href="/faq" style={{ color: "#ffffff" }}>
               Yardım ve Destek
             </Nav.Link>
+            
+            {/* {isAdmin && <Nav.Link href="/administrator" style={{ color: "red" }}>
+              Yönetim Ana Sayfa
+            </Nav.Link>} */}
+            {isAdmin && <Nav.Link href="/administrator/products" style={{ color: "red" }}>
+              Ürünleri Yönet
+            </Nav.Link>}
+            {isAdmin && <Nav.Link href="/administrator/categories" style={{ color: "red" }}>
+              Kategorileri Yönet
+            </Nav.Link>}
+            {isAdmin && <Nav.Link href="/administrator/users" style={{ color: "red" }}>
+              Kullanıcıları Yönet
+            </Nav.Link>}
+            {isAdmin && <Nav.Link href="/administrator/orders" style={{ color: "red" }}>
+              Siparişleri Yönet
+            </Nav.Link>}
+
+
           </Nav>
         </Container>
       </div>

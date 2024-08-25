@@ -10,7 +10,7 @@ import Error from "./components/Error";
 import AdminRoute from "./components/security/AdminRoute";
 import Footer from "./components/Footer";
 import MainPage from "./components/MainPage";
-import AdminMain from "./components/admin_pages/AdminMain";
+// import AdminMain from "./components/admin_pages/AdminMain";
 import AdminCategories from "./components/admin_pages/AdminCategories";
 import AdminProducts from "./components/admin_pages/AdminProducts";
 import AdminCategoryUpdate from "./components/admin_pages/AdminCategoryUpdate";
@@ -29,6 +29,7 @@ import ProductsByCategory from "./components/ProductsByCategory";
 import ProductsBySearch from "./components/ProductsBySearch";
 import ProductDetailed from "./components/ProductDetailed";
 import Reviews from "./components/user_pages/Reviews";
+import Faq from "./components/Faq";
 
 const App: React.FC = () => {
   return (
@@ -70,6 +71,7 @@ const App: React.FC = () => {
           />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="/categories/:category" element={<ProductsByCategory />} />
           <Route path="/products/search" element={<ProductsBySearch />} />
           <Route path="/products/:productId" element={<ProductDetailed />} />
@@ -156,14 +158,14 @@ const App: React.FC = () => {
             }
           />
           //! Admin Routes
-          <Route
+          {/* <Route
             path="/administrator"
             element={
               <AdminRoute>
                 <AdminMain />
               </AdminRoute>
             }
-          />
+          /> */}
           <Route
             path="/administrator/categories"
             element={
