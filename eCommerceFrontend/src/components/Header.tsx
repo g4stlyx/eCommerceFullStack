@@ -171,7 +171,7 @@ const Header: React.FC = () => {
                 </Nav.Link>
               )}
 
-              <Nav.Link href="/wishlist">
+              <Nav.Link href="/profile/wishlist">
                 <FaHeart className="me-1" /> Favorilerim
               </Nav.Link>
               <Nav.Link href="/cart">

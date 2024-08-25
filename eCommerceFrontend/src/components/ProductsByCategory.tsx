@@ -40,7 +40,7 @@ const ProductsByCategory: React.FC = () => {
             products.map((product) => (
               <Col key={product.id}>
                 <a
-                  href={`/categories/${product.category.name}/products/${product.id}`}
+                  href={`/products/${product.id}`}
                   className="text-decoration-none"
                 >
                   <Card className="h-100">

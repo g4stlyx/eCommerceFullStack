@@ -60,7 +60,7 @@ const MainPage: React.FC = () => {
           <Row xs={1} md={3} className="g-4">
             {products.map((product) => (
               <Col key={product.id}>
-                <a href={`/categories/${product.category.name}/products/${product.id}`} className="text-decoration-none">
+                <a href={`/products/${product.id}`} className="text-decoration-none">
                   <Card className="h-100">
                     <Card.Img
                       variant="top"

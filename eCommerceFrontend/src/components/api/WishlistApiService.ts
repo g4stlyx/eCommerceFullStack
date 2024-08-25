@@ -1,7 +1,7 @@
 import { apiClient } from "./ApiClient";
 
 export const getWishlistApi = () => {
-  return apiClient.get(`/wishlist/`).catch((error) => {
+  return apiClient.get(`/wishlist`).catch((error) => {
     throw error;
   });
 };

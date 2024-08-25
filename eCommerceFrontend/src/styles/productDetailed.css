@@ -1,0 +1,38 @@
+.product-image {
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.carousel-container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+.carousel-item .card {
+  height: 100%;
+}
+
+.carousel-img {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.product-detailed .carousel {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.product-detailed .btn {
+  font-size: 1.1rem;
+}
+
+.product-detailed .card {
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-detailed .card-title {
+  font-size: 1.2rem;
+}
