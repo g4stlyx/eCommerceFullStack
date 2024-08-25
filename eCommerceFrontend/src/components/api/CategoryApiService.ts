@@ -14,7 +14,7 @@ export const getCategoryByIdApi = (categoryId: number) => {
 };
 
 export const createCategoryApi = (category: Category) => {
-  return apiClient.post("/categories/", category).catch((error) => {
+  return apiClient.post("/categories", category).catch((error) => {
     if (error.response.status === 403) {
       throw new Error("You are not authorized to create a category.");
     } else {
