@@ -1,12 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { getWishlistApi, removeItemFromWishlistApi } from '../api/WishlistApiService';
-import { addItemToCartApi } from '../api/CartApiService';
-import { WishlistItem } from '../../types/types';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getWishlistApi,
+  removeItemFromWishlistApi,
+} from "../api/WishlistApiService";
+import { addItemToCartApi } from "../api/CartApiService";
+import { WishlistItem } from "../../types/types";
+import {
+  Card,
+  Button,
+  Image,
+  Container,
+  Row,
+  Col,
+  Spinner,
+} from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Wishlist: React.FC = () => {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchWishlist();
@@ -18,7 +34,7 @@ const Wishlist: React.FC = () => {
       const response = await getWishlistApi();
       setWishlistItems(response.data.wishlistItems);
     } catch (error) {
-      setError('Failed to fetch wishlist: '+ error);
+      setError("Failed to fetch wishlist: " + error);
     } finally {
       setLoading(false);
     }
@@ -27,23 +43,31 @@ const Wishlist: React.FC = () => {
   const handleAddToCart = async (productId: number) => {
     try {
       await addItemToCartApi(productId);
-      alert('Product added to cart');
+      toast.success("Product added to cart!");
     } catch (error) {
-      setError('Failed to add product to cart: '+ error);
+      toast.error("Failed to add product to cart: " + error);
     }
   };
 
   const handleRemoveFromWishlist = async (wishlistItemId: number) => {
     try {
       await removeItemFromWishlistApi(wishlistItemId);
-      setWishlistItems(wishlistItems.filter(item => item.id !== wishlistItemId));
+      setWishlistItems(
+        wishlistItems.filter((item) => item.id !== wishlistItemId)
+      );
+      toast.success("Item removed from wishlist!");
     } catch (error) {
-      setError('Failed to remove item from wishlist: '+ error);
+      toast.error("Failed to remove item from wishlist: " + error);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Container className="my-4 text-center">
+        <Spinner animation="border" />
+        <div>Yükleniyor..</div>
+      </Container>
+    );
   }
 
   if (error) {
@@ -51,26 +75,69 @@ const Wishlist: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Favorilerim</h1>
-      {!wishlistItems || wishlistItems.length === 0 ? (
-        <p>Favorilerinde ürün yok, <a href='/'>aramaya devam et.</a></p>
-      ) : (
-        <ul>
-          {wishlistItems.map((item) => (
-            <li key={item.id}>
-              <div>
-                <h3>{item.product.name}</h3>
-                <p>{item.product.description}</p>
-                <p>Price: ${item.product.price}</p>
-                <button onClick={() => handleAddToCart(item.product.id)}>Add to Cart</button>
-                <button onClick={() => handleRemoveFromWishlist(item.id)}>Remove from Wishlist</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <Container>
+        <br />
+        <h1>Favorilerim</h1>
+        <br />
+        {!wishlistItems || wishlistItems.length === 0 ? (
+          <p>
+            Favorilerinz boş, <a href="/">aramaya devam edin.</a>
+          </p>
+        ) : (
+          <Row className="g-3">
+            {wishlistItems.map((item) => (
+              <Col key={item.id} xs={12} sm={6} md={4} lg={3}>
+                <Card className="d-flex flex-column h-100">
+                  <Card.Body
+                    className="d-flex flex-column"
+                    onClick={() => navigate(`/products/${item.product.id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Image
+                      src={item.product.imgSrc}
+                      alt={item.product.name}
+                      fluid
+                      className="mb-3"
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="flex-grow-1">
+                      <Card.Title>{item.product.name}</Card.Title>
+                      <Card.Text>{item.product.description}</Card.Text>
+                    </div>
+                    <div className="mt-auto">
+                      <Card.Text>Price: ${item.product.price}</Card.Text>
+                      <div className="d-flex justify-content-between">
+                        <Button
+                          variant="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(item.product.id);
+                          }}
+                        >
+                          Sepete Ekle
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveFromWishlist(item.id);
+                          }}
+                        >
+                          Favorilerden Kaldır
+                        </Button>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+
+      <ToastContainer />
+    </>
   );
 };
 
