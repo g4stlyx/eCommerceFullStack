@@ -34,27 +34,27 @@ const Login: React.FC = () => {
     return(
         <div className="Login">
             <br />
-            <h1>Please login to continue.</h1>
+            <h1>Devam etmek için lütfen giriş yapınız.</h1>
             <br />
-            {showErrorMessage && <div className="errorMessage">Authentication Failed! Please check your credentials.</div>}
+            {showErrorMessage && <div className="errorMessage">Giriş başarısız. Bilgilerinizi kontrol ediniz!</div>}
             <div className="loginForm">
                 <div>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Kullanıcı Adı:</label>
                     <input type="text" name="username" value={username} onChange={handleUsernameChange} />
                 </div>
                 <div>
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="password">Şifre:</label>
                     <input type="password" name="password" value={password} onChange={handlePasswordChange} />
                 </div>
                 <div>
-                    <button className="btn btn-primary mt-3" name="login" onClick={handleSubmit}>Login</button>
+                    <button className="btn btn-primary mt-3" name="login" onClick={handleSubmit}>Giriş yap</button>
                 </div>
                 <br />
                 <div>
-                    Dont't you have an account? <a href="/sign-up">Sign Up.</a>
+                    Hesabınız yok mu? <a href="/sign-up">Kayıt ol.</a>
                 </div>
                 <div>
-                <a href="/forgot-password" style={{fontSize:"15px"}}>Forgot your password? </a>
+                <a href="/forgot-password" style={{fontSize:"15px"}}>Şifremi unuttum? </a>
                 </div>
             </div>
             <br />

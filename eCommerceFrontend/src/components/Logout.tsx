@@ -11,8 +11,9 @@ const Logout:React.FC = () => {
 
     return(
         <div className="Logout">
-            <h1>You are logged out!</h1>
-            <h3>Thank you for using our app. Come back soon!</h3>
+            <br />
+            <h1>Başarıyla çıkış yapıldı!</h1>
+            <h3>Uygulamamızı kullandığınız için teşekkürler. Tekrar giriş yapmak için <a href="/login">tıklayınız.</a></h3>
         </div>
     )
 }

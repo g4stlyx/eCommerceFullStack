@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CartItem, WishlistItem } from "../../types/types";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   addItemToCartApi,
   getCartApi,
@@ -16,7 +16,6 @@ import {
   Row,
   Spinner,
   ToastContainer,
-  Image,
   Modal,
 } from "react-bootstrap";
 import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
@@ -154,14 +153,13 @@ const Cart: React.FC = () => {
                   .map((wishlistItem) => (
                     <Col key={wishlistItem.id} xs={12} sm={6} md={4} lg={3}>
                       <Card className="text-center h-100">
-                        <Link to={`/products/${wishlistItem.id}`}>
-                          <Image
+                        <a href={`/products/${wishlistItem.product.id}`}>
+                          <Card.Img
                             src={wishlistItem.product.imgSrc}
                             alt={wishlistItem.product.name}
-                            fluid
                             className="carousel-img"
                           />
-                        </Link>
+                        </a>
                         <Card.Body className="d-flex flex-column">
                           <div className="mt-auto">
                             <Card.Title>{wishlistItem.product.name}</Card.Title>
@@ -197,11 +195,12 @@ const Cart: React.FC = () => {
                 <Card key={item.id} className="cart-item mb-3">
                   <Row className="align-items-center">
                     <Col xs={3}>
+                      <a href={`/products/${item.product.id}`}>
                       <Card.Img
                         src={item.product.imgSrc}
                         alt={item.product.name}
                         className="cart-item-image"
-                      />
+                      /></a>
                     </Col>
                     <Col xs={6}>
                       <Card.Body>
@@ -247,7 +246,9 @@ const Cart: React.FC = () => {
                     <Col xs={3} className="text-right">
                       <Card.Body>
                         <Card.Text className="cart-item-price">
-                          {(item.product.price * item.quantity).toFixed(2)} ₺
+                          {/* {(item.product.price * item.quantity).toFixed(2)} $ */}
+                          <div>{(item.product.price).toFixed(2)} $</div>
+                          <div>({item.quantity} adet)</div>
                         </Card.Text>
                       </Card.Body>
                     </Col>

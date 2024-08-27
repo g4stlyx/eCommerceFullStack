@@ -5,47 +5,50 @@ import { signupApi } from "./api/UserApiService";
 import { useNavigate } from "react-router-dom";
 import { SignUpFormValues } from "../types/types";
 
-const SignUp : React.FC = () => {
+const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const initialValues = {
     username: "",
     password: "",
-    isAdmin: false
+    isAdmin: false,
   };
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, "Username must be between 3 and 20 characters long!")
-      .max(20, "Username must be between 3 and 20 characters long!")
+      .min(3, "Kullanıcı adı 3 ila 20 karakter arasında olmalı!")
+      .max(20, "Kullanıcı adı 3 ila 20 karakter arasında olmalı!")
       .matches(
         /^[a-zA-Z0-9_.]+$/,
-        "Username can only contain letters, numbers, underscores, or dots!"
+        "Kullanıcı adı sadece küçük, büyük harf, sayı, . ve _ içerebilir!!"
       )
       .matches(
         /^(?!.*[_.]{2}).*$/,
-        "Username must not contain consecutive dots or underscores!"
+        "Kullanıcı adı yan yana . ve _ içeremez!"
       )
       .matches(
         /^[^_.].*[^_.]$/,
-        "Username must not start or end with a dot or underscore!"
+        "Kullanıcı adı . veya _ ile bitemez!"
       )
-      .required("Username is required!"),
+      .required("Kullanıcı adı sağlayınız!"),
     password: Yup.string()
-      .min(8, "Password must be at least 8 characters long!")
-      .max(32, "Password must not exceed 32 characters!")
-      .matches(/[A-Z]/, "Password must contain at least one uppercase letter!")
-      .matches(/[a-z]/, "Password must contain at least one lowercase letter!")
-      .matches(/[0-9]/, "Password must contain at least one number!")
+      .min(8, "Şifre 8 karakterden kısa olamaz!")
+      .max(32, "Şifre 32 karakterden uzun olamaz!")
+      .matches(/[A-Z]/, "Şifre en az bir büyük harf içermelidir!")
+      .matches(/[a-z]/, "Şifre en az bir küçük harf içermelidir!")
+      .matches(/[0-9]/, "Şifre en az bir sayı içermelidir!")
       .matches(
         /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character!"
+        "Şifre en az bir özel karakter içermelidir!"
       )
-      .matches(/^\S*$/, "Password must not contain spaces!")
-      .required("Password is required!"),
+      .matches(/^\S*$/, "Şifre boşluk içeremez!")
+      .required("Şifre sağlayınız!"),
   });
 
-  const onSubmit = (values: SignUpFormValues , { setSubmitting, resetForm }:any) => {
+  const onSubmit = (
+    values: SignUpFormValues,
+    { setSubmitting, resetForm }: any
+  ) => {
     const userPayload = {
       username: values.username,
       password: values.password,
@@ -54,7 +57,7 @@ const SignUp : React.FC = () => {
 
     signupApi(userPayload)
       .then(() => {
-        setMessage("User created successfully.");
+        setMessage("Kayıt başarılı!");
         resetForm();
         setTimeout(() => {
           setMessage("");
@@ -63,20 +66,20 @@ const SignUp : React.FC = () => {
       })
       .catch((error) => {
         if (error.response.status === 409) {
-          setMessage("A user with that username already exists.");
+          setMessage("Kullanıcı adı zaten kullanılıyor!");
         } else if (error.response.status === 400) {
           console.log(error);
           if (error.response.data.username)
             setMessage(
-              "Failed to create user: " + error.response.data.username
+              "Kayıt sırasında hata: " + error.response.data.username
             );
           if (error.response.data.password)
             setMessage(
-              "Failed to create user: " + error.response.data.password
+              "Kayıt sırasında hata: " + error.response.data.password
             );
         } else {
           console.log(error.response.data);
-          setMessage("Failed to create user.");
+          setMessage("Kayıt sırasında hata.");
         }
       })
       .finally(() => {
@@ -87,7 +90,7 @@ const SignUp : React.FC = () => {
   return (
     <div className="container">
       <br />
-      <h2>Sign Up</h2>
+      <h2>Kaydol</h2>
       <br />
       {message && <div className="alert alert-info">{message}</div>}
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -99,7 +102,7 @@ const SignUp : React.FC = () => {
           {({ isSubmitting }) => (
             <Form>
               <fieldset className="form-group" style={{ textAlign: "center" }}>
-                <label htmlFor="username">Username</label>
+                <label htmlFor="username">Kullanıcı Adı</label>
                 <Field
                   type="text"
                   className="form-control"
@@ -115,7 +118,7 @@ const SignUp : React.FC = () => {
               </fieldset>
 
               <fieldset className="form-group" style={{ textAlign: "center" }}>
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">Şifre</label>
                 <Field
                   type="password"
                   className="form-control"
@@ -136,16 +139,19 @@ const SignUp : React.FC = () => {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  Sign Up
+                  Kaydol
                 </button>
               </div>
-              <br/>
+              <br />
             </Form>
           )}
         </Formik>
       </div>
+      <div>
+        Zaten bir hesabınız var mı? <a href="/login">Giriş yap.</a>
+      </div>
     </div>
   );
-}
+};
 
 export default SignUp;

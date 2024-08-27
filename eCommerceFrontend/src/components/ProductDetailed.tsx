@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   getProductByIdApi,
   searchAndFilterProductsApi,
@@ -30,6 +30,7 @@ const ProductDetailed: React.FC = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     getProductByIdApi(Number(productId))
@@ -235,10 +236,18 @@ const ProductDetailed: React.FC = () => {
           <Button
             variant="primary"
             onClick={() => {
-
+              navigate("/login")
             }}
           >
-            Login / Sign Up
+            Giriş Yap
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate("/sign-up")
+            }}
+          >
+            Üye Ol
           </Button>
         </Modal.Footer>
       </Modal>

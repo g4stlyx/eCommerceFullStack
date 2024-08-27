@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { searchAndFilterProductsApi } from "./api/ProductApiService";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
 import { Category, Product } from "../types/types";
-import { Card, Col, Form, Row, Button, Spinner } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { Card, Col, Form, Row, Button, Spinner, Modal } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addItemToCartApi } from "./api/CartApiService";
+import { addItemToWishlistApi } from "./api/WishlistApiService";
+import { toast, ToastContainer } from "react-toastify";
 
 const ProductsBySearch: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,6 +16,9 @@ const ProductsBySearch: React.FC = () => {
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const navigate = useNavigate();
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -56,7 +62,7 @@ const ProductsBySearch: React.FC = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setIsLoading(true); 
+      setIsLoading(true);
       try {
         const response = await searchAndFilterProductsApi({
           q: searchCriteria.query,
@@ -106,6 +112,40 @@ const ProductsBySearch: React.FC = () => {
       priceMin,
       priceMax,
     });
+  };
+
+  const handleAddToCart = (id: number) => {
+    addItemToCartApi(id)
+      .then(() => {
+        toast.success("Ürün sepete eklendi!");
+      })
+      .catch((error) => {
+        if (error.response?.status === 401) {
+          setModalMessage(
+            "Sepetinize ürün eklemek için üye olmanız gerekmektedir."
+          );
+          setShowModal(true);
+        } else {
+          toast.error("Ürün sepetinize eklenemedi.");
+        }
+      });
+  };
+
+  const handleAddToWishlist = (id: number) => {
+    addItemToWishlistApi(id)
+      .then(() => {
+        toast.success("Ürün favorilere eklendi!");
+      })
+      .catch((error) => {
+        if (error.response?.status === 401) {
+          setModalMessage(
+            "Favorilerinize ürün eklemek için üye olmanız gerekmektedir."
+          );
+          setShowModal(true);
+        } else {
+          toast.error("Ürün favorilerinizde zaten mevcut.");
+        }
+      });
   };
 
   return (
@@ -168,23 +208,45 @@ const ProductsBySearch: React.FC = () => {
               {products.length > 0 ? (
                 products.map((product) => (
                   <Col key={product.id}>
-                    <a
-                      href={`/products/${product.id}`}
-                      className="text-decoration-none"
-                    >
-                      <Card className="h-100">
+                    <Card className="h-100">
+                      <a
+                        href={`/products/${product.id}`}
+                        className="text-decoration-none"
+                      >
                         <Card.Img
                           variant="top"
                           src={product.imgSrc}
                           alt={product.name}
                           style={{ height: "200px", objectFit: "cover" }}
                         />
-                        <Card.Body>
-                          <Card.Title>{product.name}</Card.Title>
-                          <Card.Text>{product.price} $</Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </a>
+                      </a>
+                      <Card.Body>
+                        <Card.Title>{product.name}</Card.Title>
+                        <Card.Text>{product.price} $</Card.Text>
+                        <div className="mt-auto">
+                          <div className="d-flex justify-content-around">
+                            <Button
+                              variant="primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(product.id);
+                              }}
+                            >
+                              Sepete Ekle
+                            </Button>
+                            <Button
+                              variant="outline-primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToWishlist(product.id);
+                              }}
+                            >
+                              Favorilere Ekle
+                            </Button>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
                   </Col>
                 ))
               ) : (
@@ -194,6 +256,40 @@ const ProductsBySearch: React.FC = () => {
           </>
         )}
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer />
+
+      {/* Modal for login/signup */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Üye Olmanız Gerekiyor.</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{modalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Kapat
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Giriş Yap
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate("/sign-up");
+            }}
+          >
+            Üye Ol
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
