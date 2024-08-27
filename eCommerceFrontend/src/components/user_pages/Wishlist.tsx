@@ -82,7 +82,7 @@ const Wishlist: React.FC = () => {
         <br />
         {!wishlistItems || wishlistItems.length === 0 ? (
           <p>
-            Favorilerinz boş, <a href="/">aramaya devam edin.</a>
+            Favorileriniz boş, <a href="/">aramaya devam edin.</a>
           </p>
         ) : (
           <Row className="g-3">

@@ -24,9 +24,9 @@ export const removeItemFromCartApi = (cartItemId: number) => {
   });
 };
 
-export const updateItemQuantityApi = (cartItemId: number) => {
-  return apiClient.put(`/cart/${cartItemId}/quantity`).catch((error) => {
-    if (error.response.status === 403) {
+export const updateItemQuantityApi = (cartItemId: number, quantity: number) => {
+  return apiClient.put(`/cart/${cartItemId}/quantity`, { quantity }).catch((error) => {
+    if (error.response && error.response.status === 403) {
       throw new Error("You are not authorized to update a category.");
     } else {
       throw error;

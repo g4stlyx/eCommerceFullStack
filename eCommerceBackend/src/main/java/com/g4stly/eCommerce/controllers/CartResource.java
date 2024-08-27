@@ -22,6 +22,7 @@ import com.g4stly.eCommerce.models.CartItem;
 import com.g4stly.eCommerce.models.Order;
 import com.g4stly.eCommerce.models.OrderItem;
 import com.g4stly.eCommerce.models.Product;
+import com.g4stly.eCommerce.models.UpdateQuantityRequest;
 import com.g4stly.eCommerce.models.User;
 import com.g4stly.eCommerce.repositories.CartItemRepository;
 import com.g4stly.eCommerce.repositories.CartRepository;
@@ -144,7 +145,7 @@ public class CartResource {
     }
 
     @PutMapping("/cart/{cartItemId}/quantity")
-    public ResponseEntity<?> updateCartItemQuantity(@PathVariable Integer cartItemId, @RequestBody int quantity) {
+    public ResponseEntity<?> updateCartItemQuantity(@PathVariable Integer cartItemId, @RequestBody UpdateQuantityRequest updateQuantityRequest) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -157,7 +158,7 @@ public class CartResource {
                     HttpStatus.UNAUTHORIZED);
         }
 
-        item.setQuantity(quantity);
+        item.setQuantity(updateQuantityRequest.getQuantity());
         cartItemRepository.save(item);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }

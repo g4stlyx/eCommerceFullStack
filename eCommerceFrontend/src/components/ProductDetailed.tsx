@@ -223,14 +223,14 @@ const ProductDetailed: React.FC = () => {
       {/* Modal for login/signup */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Authentication Required</Modal.Title>
+          <Modal.Title>Üye Olmanız Gerekiyor.</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{modalMessage}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
+            Kapat
           </Button>
           <Button
             variant="primary"

@@ -1,0 +1,41 @@
+.cart-item {
+  height: 150px;
+}
+
+.cart-item-image {
+  max-height: 100px;
+  object-fit:contain;
+}
+
+.cart-item-title {
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.cart-item-description {
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.cart-item-price {
+  font-size: 1rem;
+}
+
+.checkout-card {
+  height: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button {
+  min-width: 40px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+button .fa-trash-alt {
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 3px;
+}

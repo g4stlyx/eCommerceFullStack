@@ -15,6 +15,7 @@ import com.g4stly.eCommerce.models.Cart;
 import com.g4stly.eCommerce.models.CartItem;
 import com.g4stly.eCommerce.models.Order;
 import com.g4stly.eCommerce.models.Product;
+import com.g4stly.eCommerce.models.UpdateQuantityRequest;
 import com.g4stly.eCommerce.models.User;
 import com.g4stly.eCommerce.repositories.CartItemRepository;
 import com.g4stly.eCommerce.repositories.CartRepository;
@@ -178,7 +179,10 @@ class CartResourceTest {
         when(userRepository.findByUsername("usernameValid1")).thenReturn(Optional.of(user));
         when(cartItemRepository.findById(1)).thenReturn(Optional.of(cartItem));
 
-        ResponseEntity<?> response = cartResource.updateCartItemQuantity(1, 5);
+        UpdateQuantityRequest updateQuantityRequest = new UpdateQuantityRequest();
+        updateQuantityRequest.setQuantity(5);
+
+        ResponseEntity<?> response = cartResource.updateCartItemQuantity(1, updateQuantityRequest);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(5, ((CartItem) response.getBody()).getQuantity());
