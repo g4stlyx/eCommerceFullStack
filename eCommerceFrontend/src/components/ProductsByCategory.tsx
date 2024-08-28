@@ -88,7 +88,7 @@ const ProductsByCategory: React.FC = () => {
                       variant="top"
                       src={product.imgSrc}
                       alt={product.name}
-                      style={{ height: "200px", objectFit: "cover" }}
+                      style={{ height: "200px", objectFit: "contain" }}
                     />
                   </a>
                   <Card.Body>
