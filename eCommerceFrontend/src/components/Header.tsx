@@ -47,7 +47,6 @@ const Header: React.FC = () => {
       const searchPath = `/products/search?q=${encodeURIComponent(queryParam)}`;
 
       if (location.pathname === '/products/search') {
-        // Update the query string without navigating
         navigate(searchPath, { replace: true });
       } else {
         navigate(searchPath);
@@ -74,12 +73,9 @@ const Header: React.FC = () => {
               Hakkımızda
             </Nav.Link>
             <Nav.Link href="/faq" style={{ color: "#ffffff" }}>
-              Yardım ve Destek
+              Sıkça Sorulan Sorular
             </Nav.Link>
             
-            {/* {isAdmin && <Nav.Link href="/administrator" style={{ color: "red" }}>
-              Yönetim Ana Sayfa
-            </Nav.Link>} */}
             {isAdmin && <Nav.Link href="/administrator/products" style={{ color: "red" }}>
               Ürünleri Yönet
             </Nav.Link>}
