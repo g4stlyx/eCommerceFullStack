@@ -13,6 +13,7 @@ import {
 import { useAuth } from "./security/AuthContext";
 import { FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
+import { getCartApi } from "./api/CartApiService";
 import { useNavigate } from "react-router-dom";
 import { Category } from "../types/types";
 
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
   const isAuthenticated = authContext.isAuthenticated;
   const isAdmin = authContext.isAdmin;
   const [categories, setCategories] = useState<Category[]>([]);
+  const [cartCount, setCartCount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
 
@@ -28,7 +30,6 @@ const Header: React.FC = () => {
     const fetchCategories = async () => {
       getAllCategoriesApi()
         .then((response) => {
-          console.log("API Response:", response);
           if (Array.isArray(response.data)) {
             setCategories(response.data);
           } else {
@@ -37,7 +38,17 @@ const Header: React.FC = () => {
         })
         .catch((err) => console.log(err));
     };
+
+    const fetchCartCount = async () => {
+      getCartApi()
+        .then((response) => {
+          setCartCount(response.data.cartItems.length);
+        })
+        .catch((err) => console.log(err));
+    };
+
     fetchCategories();
+    fetchCartCount();
   }, []);
 
   const search = (formEvent: React.FormEvent) => {
@@ -46,7 +57,7 @@ const Header: React.FC = () => {
       const queryParam = searchQuery;
       const searchPath = `/products/search?q=${encodeURIComponent(queryParam)}`;
 
-      if (location.pathname === '/products/search') {
+      if (location.pathname === "/products/search") {
         navigate(searchPath, { replace: true });
       } else {
         navigate(searchPath);
@@ -58,6 +69,7 @@ const Header: React.FC = () => {
 
   return (
     <>
+      {/* Top Bar */}
       <div
         className="top-bar"
         style={{
@@ -75,25 +87,34 @@ const Header: React.FC = () => {
             <Nav.Link href="/faq" style={{ color: "#ffffff" }}>
               Sıkça Sorulan Sorular
             </Nav.Link>
-            
-            {isAdmin && <Nav.Link href="/administrator/products" style={{ color: "red" }}>
-              Ürünleri Yönet
-            </Nav.Link>}
-            {isAdmin && <Nav.Link href="/administrator/categories" style={{ color: "red" }}>
-              Kategorileri Yönet
-            </Nav.Link>}
-            {isAdmin && <Nav.Link href="/administrator/users" style={{ color: "red" }}>
-              Kullanıcıları Yönet
-            </Nav.Link>}
-            {isAdmin && <Nav.Link href="/administrator/orders" style={{ color: "red" }}>
-              Siparişleri Yönet
-            </Nav.Link>}
-
-
+            {isAdmin && (
+              <Nav.Link href="/administrator/products" style={{ color: "red" }}>
+                Ürünleri Yönet
+              </Nav.Link>
+            )}
+            {isAdmin && (
+              <Nav.Link
+                href="/administrator/categories"
+                style={{ color: "red" }}
+              >
+                Kategorileri Yönet
+              </Nav.Link>
+            )}
+            {isAdmin && (
+              <Nav.Link href="/administrator/users" style={{ color: "red" }}>
+                Kullanıcıları Yönet
+              </Nav.Link>
+            )}
+            {isAdmin && (
+              <Nav.Link href="/administrator/orders" style={{ color: "red" }}>
+                Siparişleri Yönet
+              </Nav.Link>
+            )}
           </Nav>
         </Container>
       </div>
 
+      {/* Navbar */}
       <Navbar
         bg="dark"
         variant="dark"
@@ -117,7 +138,7 @@ const Header: React.FC = () => {
                     </NavDropdown.Item>
                   ))
                 ) : (
-                  <NavDropdown.Item disabled>Loading...</NavDropdown.Item>
+                  <NavDropdown.Item disabled>Yükleniyor...</NavDropdown.Item>
                 )}
               </NavDropdown>
             </Nav>
@@ -144,8 +165,7 @@ const Header: React.FC = () => {
                 <NavDropdown
                   title={
                     <>
-                      <FaUser className="me-1" />
-                      Hesabım
+                      <FaUser className="me-1" /> Hesabım
                     </>
                   }
                   id="account-dropdown"
@@ -162,16 +182,31 @@ const Header: React.FC = () => {
                   <NavDropdown.Item href="/logout">Çıkış yap</NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <Nav.Link href="/login">
-                  <FaUser className="me-1" /> Giriş yap
-                </Nav.Link>
+                <NavDropdown
+                  title={
+                    <>
+                      <FaUser className="me-1" /> Giriş Yap
+                    </>
+                  }
+                  id="account-dropdown"
+                >
+                  <NavDropdown.Item href="/login">
+                    Giriş Yap
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/sign-up">
+                    Üye Ol
+                  </NavDropdown.Item>
+                </NavDropdown>
               )}
-
               <Nav.Link href="/profile/wishlist">
                 <FaHeart className="me-1" /> Favorilerim
               </Nav.Link>
-              <Nav.Link href="/cart">
+
+              <Nav.Link href="/cart" className="position-relative">
                 <FaShoppingCart className="me-1" /> Sepetim
+                {cartCount > 0 && (
+                  <span className="cart-count-badge">{cartCount}</span>
+                )}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
