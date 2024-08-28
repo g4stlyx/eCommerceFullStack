@@ -32,6 +32,9 @@ export interface ErrorProps{
 export interface SignUpFormValues{
     username: string;
     password:string;
+    email?: string;
+    phoneNumber?: string;
+    address?: string;
 }
 
 export interface User{
@@ -53,6 +56,9 @@ export interface UserSignUp{
     username: string;
     password: string;
     isAdmin: boolean;
+    email?: string;
+    phoneNumber?: string;
+    address?: string;
 }
 
 export interface Product{

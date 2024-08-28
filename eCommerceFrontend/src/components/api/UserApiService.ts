@@ -7,13 +7,3 @@ export const deleteUserApi = (id:number) => apiClient.delete(`/users/${id}`)
 export const updateUserApi = (username:string, user:User) => apiClient.put(`/users/${username}`, user)
 export const createUserApi = (user:User) => apiClient.post("/users", user)
 export const signupApi = (user:UserSignUp) => apiClient.post("/signup", user)
-// export const updateTodoApi = (username:string, id:number, todo:Todo) => {
-//     return apiClient.put(`users/${username}/todos/${id}`, todo)
-//         .catch(error => {
-//             if (error.response.status === 403) {
-//                 throw new Error("You are not authorized to update this todo.");
-//             } else {
-//                 throw error;
-//             }
-//         });
-// }
