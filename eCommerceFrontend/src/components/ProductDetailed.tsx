@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   getProductByIdApi,
   searchAndFilterProductsApi,
 } from "./api/ProductApiService";
-import { addItemToCartApi } from "./api/CartApiService";
-import { addItemToWishlistApi } from "./api/WishlistApiService";
+import { handleAddToCart, handleAddToWishlist } from "../utils/utils";
 import { getReviewsByProductIdApi } from "./api/ReviewApiService";
 import {
   Container,
@@ -14,13 +13,14 @@ import {
   Image,
   Button,
   Card,
-  Modal,
 } from "react-bootstrap";
 import { Product, Review } from "../types/types";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/productDetailed.css";
+import LoginModal from "../utils/LoginModal";
+import { useModalAndToast } from "../utils/useModalAndToast";
 
 const ProductDetailed: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -28,9 +28,7 @@ const ProductDetailed: React.FC = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const navigate = useNavigate();
+  const { setShowModal, setModalMessage } = useModalAndToast();
 
   useEffect(() => {
     getProductByIdApi(Number(productId))
@@ -68,40 +66,6 @@ const ProductDetailed: React.FC = () => {
     );
   };
 
-  const handleAddToCart = (id: number) => {
-    addItemToCartApi(id)
-      .then(() => {
-        toast.success("Ürün sepete eklendi!");
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          setModalMessage(
-            "Sepetinize ürün eklemek için üye olmanız gerekmektedir."
-          );
-          setShowModal(true);
-        } else {
-          toast.error("Ürün sepetinize eklenemedi.");
-        }
-      });
-  };
-
-  const handleAddToWishlist = (id: number) => {
-    addItemToWishlistApi(id)
-      .then(() => {
-        toast.success("Ürün favorilere eklendi!");
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          setModalMessage(
-            "Favorilerinize ürün eklemek için üye olmanız gerekmektedir."
-          );
-          setShowModal(true);
-        } else {
-          toast.error("Ürün favorilerinizde zaten mevcut.");
-        }
-      });
-  };
-
   return (
     <>
       <Container className="product-detailed my-4">
@@ -130,13 +94,17 @@ const ProductDetailed: React.FC = () => {
             <div className="d-flex justify-content-center gap-2 mt-3">
               <Button
                 variant="primary"
-                onClick={() => handleAddToCart(product.id)}
+                onClick={() =>
+                  handleAddToCart(product.id, setShowModal, setModalMessage)
+                }
               >
                 Sepete ekle
               </Button>
               <Button
                 variant="outline-primary"
-                onClick={() => handleAddToWishlist(product.id)}
+                onClick={() =>
+                  handleAddToWishlist(product.id, setShowModal, setModalMessage)
+                }
               >
                 Favorilere ekle
               </Button>
@@ -169,14 +137,26 @@ const ProductDetailed: React.FC = () => {
                         </Card.Text>
                         <Button
                           variant="primary"
-                          onClick={() => handleAddToCart(relatedProduct.id)}
+                          onClick={() =>
+                            handleAddToCart(
+                              relatedProduct.id,
+                              setShowModal,
+                              setModalMessage
+                            )
+                          }
                         >
                           <FaShoppingCart /> Sepete Ekle
                         </Button>
                         <Button
                           variant="outline-primary"
                           className="mt-2"
-                          onClick={() => handleAddToWishlist(relatedProduct.id)}
+                          onClick={() =>
+                            handleAddToWishlist(
+                              relatedProduct.id,
+                              setShowModal,
+                              setModalMessage
+                            )
+                          }
                         >
                           <FaHeart /> Favorilere Ekle
                         </Button>
@@ -222,35 +202,7 @@ const ProductDetailed: React.FC = () => {
       <ToastContainer />
 
       {/* Modal for login/signup */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Üye Olmanız Gerekiyor.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{modalMessage}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Kapat
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              navigate("/login")
-            }}
-          >
-            Giriş Yap
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              navigate("/sign-up")
-            }}
-          >
-            Üye Ol
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <LoginModal />
     </>
   );
 };

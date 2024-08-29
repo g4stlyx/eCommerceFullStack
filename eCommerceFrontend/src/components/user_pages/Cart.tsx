@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { CartItem, WishlistItem } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import {
-  addItemToCartApi,
   getCartApi,
   removeItemFromCartApi,
   updateItemQuantityApi,
@@ -16,23 +15,23 @@ import {
   Row,
   Spinner,
   ToastContainer,
-  Modal,
 } from "react-bootstrap";
 import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import "../../styles/cart.css";
-import "../../styles/productDetailed.css"
-import { toast } from "react-toastify";
+import "../../styles/productDetailed.css";
+import LoginModal from "../../utils/LoginModal";
+import { useModalAndToast } from "../../utils/useModalAndToast";
+import { handleAddToCart } from "../../utils/utils";
 
 const Cart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
+  const {setShowModal, setModalMessage} = useModalAndToast();
 
   useEffect(() => {
     fetchCart();
@@ -103,23 +102,6 @@ const Cart: React.FC = () => {
     );
   };
 
-  const handleAddToCart = (id: number) => {
-    addItemToCartApi(id)
-      .then(() => {
-        toast.success("Ürün sepete eklendi!");
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          setModalMessage(
-            "Sepetinize ürün eklemek için üye olmanız gerekmektedir."
-          );
-          setShowModal(true);
-        } else {
-          toast.error("Ürün sepetinize eklenemedi.");
-        }
-      });
-  };
-
   if (loading) {
     return (
       <Container className="my-4 text-center">
@@ -168,7 +150,7 @@ const Cart: React.FC = () => {
                             </Card.Text>
                             <Button
                               variant="primary"
-                              onClick={() => handleAddToCart(wishlistItem.id)}
+                              onClick={() => handleAddToCart(wishlistItem.id, setShowModal, setModalMessage)}
                             >
                               <FaShoppingCart /> Sepete Ekle
                             </Button>
@@ -196,11 +178,12 @@ const Cart: React.FC = () => {
                   <Row className="align-items-center">
                     <Col xs={3}>
                       <a href={`/products/${item.product.id}`}>
-                      <Card.Img
-                        src={item.product.imgSrc}
-                        alt={item.product.name}
-                        className="cart-item-image"
-                      /></a>
+                        <Card.Img
+                          src={item.product.imgSrc}
+                          alt={item.product.name}
+                          className="cart-item-image"
+                        />
+                      </a>
                     </Col>
                     <Col xs={6}>
                       <Card.Body>
@@ -246,8 +229,7 @@ const Cart: React.FC = () => {
                     <Col xs={3} className="text-right">
                       <Card.Body>
                         <Card.Text className="cart-item-price">
-                          {/* {(item.product.price * item.quantity).toFixed(2)} $ */}
-                          <div>{(item.product.price).toFixed(2)} $</div>
+                          <div>{item.product.price.toFixed(2)} $</div>
                           <div>({item.quantity} adet)</div>
                         </Card.Text>
                       </Card.Body>
@@ -274,28 +256,8 @@ const Cart: React.FC = () => {
       </Container>
 
       <ToastContainer />
-       {/* Modal for login/signup */}
-       <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Üye Olmanız Gerekiyor.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{modalMessage}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Kapat
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-
-            }}
-          >
-            Login / Sign Up
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Modal for login/signup */}
+      <LoginModal />
     </>
   );
 };

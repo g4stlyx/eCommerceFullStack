@@ -4,7 +4,6 @@ import {
   getWishlistApi,
   removeItemFromWishlistApi,
 } from "../api/WishlistApiService";
-import { addItemToCartApi } from "../api/CartApiService";
 import { WishlistItem } from "../../types/types";
 import {
   Card,
@@ -17,12 +16,15 @@ import {
 } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useModalAndToast } from "../../utils/useModalAndToast";
+import { handleAddToCart } from "../../utils/utils";
 
 const Wishlist: React.FC = () => {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const {setShowModal, setModalMessage} = useModalAndToast();
 
   useEffect(() => {
     fetchWishlist();
@@ -37,15 +39,6 @@ const Wishlist: React.FC = () => {
       setError("Failed to fetch wishlist: " + error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleAddToCart = async (productId: number) => {
-    try {
-      await addItemToCartApi(productId);
-      toast.success("Product added to cart!");
-    } catch (error) {
-      toast.error("Failed to add product to cart: " + error);
     }
   };
 
@@ -112,7 +105,7 @@ const Wishlist: React.FC = () => {
                           variant="primary"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleAddToCart(item.product.id);
+                            handleAddToCart(item.product.id, setShowModal, setModalMessage);
                           }}
                         >
                           Sepete Ekle
