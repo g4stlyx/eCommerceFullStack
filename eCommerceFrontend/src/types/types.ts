@@ -45,7 +45,6 @@ export interface User{
     email:string | null;
     phoneNumber: string | null;
     address: string | null;
-    //! should these have a choice to be null?
     orders: Order[] | null; 
     reviews: Review[] | null;
     cart: Cart | null;
