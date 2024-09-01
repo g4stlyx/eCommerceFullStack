@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Card, Col } from "react-bootstrap";
 import { handleAddToCart, handleAddToWishlist } from "./utils";
 import { Product } from "../types/types";
-import { useModalAndToast } from "./useModalAndToast";
+import { useModalContext } from "../context/ModalContext";
 
 function ProductCard({ product }: { product: Product }) {
-  const { setShowModal, setModalMessage } = useModalAndToast();
+  const { setShowModal, setModalMessage } = useModalContext();
 
   return (
     <Col key={product.id}>

@@ -62,7 +62,7 @@ const MainPage: React.FC = () => {
         <Col md={9}>
           <Row xs={1} md={3} className="g-4">
             {products.map((product) => (
-              <ProductCard product={product} />
+              <ProductCard product={product} key={product.id}/>
             ))}
           </Row>
         </Col>

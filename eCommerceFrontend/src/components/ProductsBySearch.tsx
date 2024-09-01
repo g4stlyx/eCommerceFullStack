@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { searchAndFilterProductsApi } from "./api/ProductApiService";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
 import { Category, Product } from "../types/types";
-import { Form, Row, Button, Spinner } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { Form, Row, Button, Spinner, Modal } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import LoginModal from "../utils/LoginModal";
 import ProductCard from "../utils/ProductCard";
+import { useModalContext } from "../context/ModalContext";
 
 const ProductsBySearch: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -16,6 +16,9 @@ const ProductsBySearch: React.FC = () => {
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { showModal, setShowModal, modalMessage } = useModalContext();
+
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -169,9 +172,7 @@ const ProductsBySearch: React.FC = () => {
 
             <Row xs={1} md={3} className="g-4">
               {products.length > 0 ? (
-                products.map((product) => (
-                  <ProductCard product={product} />
-                ))
+                products.map((product) => <ProductCard product={product} key={product.id}/>)
               ) : (
                 <div>Aradığınız kritlerde ürün bulunamadı.</div>
               )}
@@ -184,8 +185,35 @@ const ProductsBySearch: React.FC = () => {
       <ToastContainer />
 
       {/* Modal for login/signup */}
-      <LoginModal />
-
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Üye Olmanız Gerekiyor.</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{modalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Kapat
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Giriş Yap
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              navigate("/sign-up");
+            }}
+          >
+            Üye Ol
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

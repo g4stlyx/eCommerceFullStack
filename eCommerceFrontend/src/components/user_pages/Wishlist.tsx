@@ -16,15 +16,15 @@ import {
 } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useModalAndToast } from "../../utils/useModalAndToast";
 import { handleAddToCart } from "../../utils/utils";
+import { useModalContext } from "../../context/ModalContext";
 
 const Wishlist: React.FC = () => {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {setShowModal, setModalMessage} = useModalAndToast();
+  const {setShowModal, setModalMessage} = useModalContext();
 
   useEffect(() => {
     fetchWishlist();
@@ -36,7 +36,7 @@ const Wishlist: React.FC = () => {
       const response = await getWishlistApi();
       setWishlistItems(response.data.wishlistItems);
     } catch (error) {
-      setError("Failed to fetch wishlist: " + error);
+      setError("Favorileriniz bulunamadı: " + error);
     } finally {
       setLoading(false);
     }
@@ -48,9 +48,9 @@ const Wishlist: React.FC = () => {
       setWishlistItems(
         wishlistItems.filter((item) => item.id !== wishlistItemId)
       );
-      toast.success("Item removed from wishlist!");
+      toast.success("Ürün favorilerinizden başarıyla kaldırıldı!");
     } catch (error) {
-      toast.error("Failed to remove item from wishlist: " + error);
+      toast.error("Ürün favorilerinizden kaldırılamadı: " + error);
     }
   };
 

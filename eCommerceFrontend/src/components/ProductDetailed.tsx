@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/productDetailed.css";
 import LoginModal from "../utils/LoginModal";
-import { useModalAndToast } from "../utils/useModalAndToast";
+import { useModalContext } from "../context/ModalContext";
 
 const ProductDetailed: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -28,7 +28,7 @@ const ProductDetailed: React.FC = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const { setShowModal, setModalMessage } = useModalAndToast();
+  const {setModalMessage, setShowModal} = useModalContext();
 
   useEffect(() => {
     getProductByIdApi(Number(productId))

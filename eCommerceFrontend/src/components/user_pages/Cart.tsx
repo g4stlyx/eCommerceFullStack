@@ -20,8 +20,8 @@ import { FaShoppingCart, FaTrashAlt } from "react-icons/fa";
 import "../../styles/cart.css";
 import "../../styles/productDetailed.css";
 import LoginModal from "../../utils/LoginModal";
-import { useModalAndToast } from "../../utils/useModalAndToast";
 import { handleAddToCart } from "../../utils/utils";
+import { useModalContext } from "../../context/ModalContext";
 
 const Cart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -31,7 +31,7 @@ const Cart: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
-  const {setShowModal, setModalMessage} = useModalAndToast();
+  const {setShowModal, setModalMessage} = useModalContext();
 
   useEffect(() => {
     fetchCart();

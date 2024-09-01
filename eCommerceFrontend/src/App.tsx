@@ -157,15 +157,6 @@ const App: React.FC = () => {
               </AuthenticatedRoute>
             }
           />
-          //! Admin Routes
-          {/* <Route
-            path="/administrator"
-            element={
-              <AdminRoute>
-                <AdminMain />
-              </AdminRoute>
-            }
-          /> */}
           <Route
             path="/administrator/categories"
             element={
