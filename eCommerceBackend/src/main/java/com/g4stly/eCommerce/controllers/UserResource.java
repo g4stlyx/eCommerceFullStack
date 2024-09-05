@@ -49,7 +49,7 @@ public class UserResource {
     }
 
     @GetMapping("/users/{username}")
-    public User getUserById(@PathVariable String username) {
+    public User getUserByUsername(@PathVariable String username) {
         return userRepository.findByUsername(username).get();
     }
 
@@ -136,10 +136,6 @@ public class UserResource {
             User updatedUser = userRepository.save(usertoUpdate);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         }
-        // ! username değiştirilemiyor, bu yüzden tekrar kontrole gerek yok
-        // catch (DataIntegrityViolationException e) {
-        // return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
-        // }
         catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
