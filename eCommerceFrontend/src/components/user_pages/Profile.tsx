@@ -37,6 +37,7 @@ const Profile: React.FC = () => {
     if (!username) return;
     if (userData) {
       try {
+        console.log(userData);
         await updateUserApi(username, userData);
         alert("Profile updated successfully!");
       } catch (error) {
@@ -51,6 +52,7 @@ const Profile: React.FC = () => {
     if (!username) return;
     if (userData) {
       try {
+        console.log(userData);
         await updateUserApi(username, { ...userData, password: newPassword });
         alert("Password changed successfully!");
       } catch (error) {
