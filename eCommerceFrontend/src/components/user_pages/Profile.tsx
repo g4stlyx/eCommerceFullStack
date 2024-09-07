@@ -3,6 +3,8 @@ import { Tab, Tabs, Form, Button, Container, Row, Col } from "react-bootstrap";
 import { getUserByUsernameApi, updateUserApi } from "../api/UserApiService";
 import { useAuth } from "../security/AuthContext";
 import { UserSignUp } from "../../types/types";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile: React.FC = () => {
   const authContext = useAuth();
@@ -20,7 +22,7 @@ const Profile: React.FC = () => {
         setUserData({
           username: response.data.username,
           email: response.data.email,
-          address : response.data.address,
+          address: response.data.address,
           phoneNumber: response.data.phoneNumber,
           password: response.data.password,
           isAdmin: response.data.isAdmin,
@@ -46,10 +48,10 @@ const Profile: React.FC = () => {
       try {
         console.log(userData);
         await updateUserApi(username, userData);
-        alert("Profile updated successfully!");
+        toast.success("Profil başarıyla güncellendi!");
       } catch (error) {
         console.error("Error updating profile:", error);
-        alert("Failed to update profile.");
+        toast.error("Profili güncellerken hata!");
       }
     }
   };
@@ -61,10 +63,10 @@ const Profile: React.FC = () => {
       try {
         console.log(userData);
         await updateUserApi(username, { ...userData, password: newPassword });
-        alert("Password changed successfully!");
+        toast.success("Parolanız başarıyla güncellendi!");
       } catch (error) {
         console.error("Error changing password:", error);
-        alert("Failed to change password.");
+        toast.error("Parola güncellenirken hata!");
       }
     }
   };
@@ -194,6 +196,9 @@ const Profile: React.FC = () => {
           </Form>
         </Tab>
       </Tabs>
+
+      {/* Toast notifications */}
+      <ToastContainer />
     </Container>
   );
 };
