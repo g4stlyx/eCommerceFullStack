@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Tab, Tabs, Form, Button, Container, Row, Col } from "react-bootstrap";
 import { getUserByUsernameApi, updateUserApi } from "../api/UserApiService";
-import { User } from "../../types/types";
 import { useAuth } from "../security/AuthContext";
+import { UserSignUp } from "../../types/types";
 
 const Profile: React.FC = () => {
   const authContext = useAuth();
   const username = authContext.username;
 
-  const [userData, setUserData] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserSignUp | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
 
@@ -17,7 +17,14 @@ const Profile: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await getUserByUsernameApi(username);
-        setUserData(response.data);
+        setUserData({
+          username: response.data.username,
+          email: response.data.email,
+          address : response.data.address,
+          phoneNumber: response.data.phoneNumber,
+          password: response.data.password,
+          isAdmin: response.data.isAdmin,
+        });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

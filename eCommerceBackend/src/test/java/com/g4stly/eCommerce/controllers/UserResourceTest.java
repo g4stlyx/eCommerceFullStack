@@ -54,7 +54,7 @@ class UserResourceTest {
         User mockUser = new User();
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser));
 
-        User result = userResource.getUserById(username);
+        User result = userResource.getUserByUsername(username);
 
         assertEquals(mockUser, result);
     }
