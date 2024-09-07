@@ -5,6 +5,7 @@ import { useAuth } from "../security/AuthContext";
 import { UserSignUp } from "../../types/types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import bcrypt from "bcryptjs";
 
 const Profile: React.FC = () => {
   const authContext = useAuth();
@@ -13,6 +14,7 @@ const Profile: React.FC = () => {
   const [userData, setUserData] = useState<UserSignUp | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!username) return;
@@ -56,14 +58,42 @@ const Profile: React.FC = () => {
     }
   };
 
+  const validatePassword = (password: string): string | null => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{3,32}$/;
+    if (!password) {
+      return "Şifre boş olamaz!";
+    }
+    if (!passwordRegex.test(password)) {
+      return "Şifre 3-32 karakter arasında olmalı, en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir!";
+    }
+    return null;
+  };
+
   const handlePasswordChangeSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!username) return;
+
+    const validationError = validatePassword(newPassword);
+    setPasswordError(validationError);
+    if (validationError) return;
+
     if (userData) {
       try {
-        console.log(userData);
+        // Compare the entered old password with the stored (hashed) password
+        const isPasswordMatch = await bcrypt.compare(oldPassword, userData.password);
+
+        if (!isPasswordMatch) {
+          toast.error("Mevcut şifreniz yanlış!");
+          return;
+        }
+
+        // Proceed to update the password only if the current password matches
         await updateUserApi(username, { ...userData, password: newPassword });
         toast.success("Parolanız başarıyla güncellendi!");
+        setNewPassword("");
+        setOldPassword("");
+        setPasswordError(null);
       } catch (error) {
         console.error("Error changing password:", error);
         toast.error("Parola güncellenirken hata!");
@@ -159,7 +189,6 @@ const Profile: React.FC = () => {
                 sm={2}
                 style={{ fontSize: "small", textAlign: "left" }}
               >
-                {" "}
                 Mevcut Şifre
               </Form.Label>
               <Col sm={10}>
@@ -177,7 +206,6 @@ const Profile: React.FC = () => {
                 sm={2}
                 style={{ fontSize: "small", textAlign: "left" }}
               >
-                {" "}
                 Yeni Şifre
               </Form.Label>
               <Col sm={10}>
@@ -186,7 +214,11 @@ const Profile: React.FC = () => {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Yeni şifre"
+                  isInvalid={!!passwordError}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {passwordError}
+                </Form.Control.Feedback>
               </Col>
             </Form.Group>
             <br />
