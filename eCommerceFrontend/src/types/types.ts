@@ -53,8 +53,9 @@ export interface User{
 
 export interface UserSignUp{
     username: string;
-    password: string;
+    password?: string;
     isAdmin: boolean;
+    admin?: boolean;
     email?: string;
     phoneNumber?: string;
     address?: string;

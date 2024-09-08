@@ -30,12 +30,12 @@ const AdminProducts: React.FC = () => {
   };
 
   const handleDeleteProduct = async (productId: number) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm('Bu ürünü silmek istediğinize emin misiniz?')) {
       try {
         await deleteProductApi(productId);
         fetchProducts();
       } catch (error) {
-        console.error('Failed to delete product:', error);
+        console.error('Ürün silinirken hata: ', error);
       }
     }
   };

@@ -15,6 +15,7 @@ const Profile: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [hashedPassword, setHashedPassword] = useState<string>("");
 
   useEffect(() => {
     if (!username) return;
@@ -26,9 +27,12 @@ const Profile: React.FC = () => {
           email: response.data.email,
           address: response.data.address,
           phoneNumber: response.data.phoneNumber,
-          password: response.data.password,
-          isAdmin: response.data.isAdmin,
+          password: "",
+          isAdmin: response.data.admin,
+          admin: response.data.admin,
         });
+
+        setHashedPassword(response.data.password);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -45,16 +49,14 @@ const Profile: React.FC = () => {
 
   const handleProfileSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!username) return;
-    if (userData) {
-      try {
-        console.log(userData);
-        await updateUserApi(username, userData);
-        toast.success("Profil başarıyla güncellendi!");
-      } catch (error) {
-        console.error("Error updating profile:", error);
-        toast.error("Profili güncellerken hata!");
-      }
+    if (!username || !userData) return;
+
+    try {
+      await updateUserApi(username, userData);
+      toast.success("Profil başarıyla güncellendi!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Profili güncellerken hata!");
     }
   };
 
@@ -72,32 +74,30 @@ const Profile: React.FC = () => {
 
   const handlePasswordChangeSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!username) return;
+    if (!username || !userData) return;
 
     const validationError = validatePassword(newPassword);
     setPasswordError(validationError);
     if (validationError) return;
 
-    if (userData) {
-      try {
-        // Compare the entered old password with the stored (hashed) password
-        const isPasswordMatch = await bcrypt.compare(oldPassword, userData.password);
+    try {
+      const isPasswordMatch = await bcrypt.compare(oldPassword, hashedPassword);
 
-        if (!isPasswordMatch) {
-          toast.error("Mevcut şifreniz yanlış!");
-          return;
-        }
-
-        // Proceed to update the password only if the current password matches
-        await updateUserApi(username, { ...userData, password: newPassword });
-        toast.success("Parolanız başarıyla güncellendi!");
-        setNewPassword("");
-        setOldPassword("");
-        setPasswordError(null);
-      } catch (error) {
-        console.error("Error changing password:", error);
-        toast.error("Parola güncellenirken hata!");
+      if (!isPasswordMatch) {
+        toast.error("Mevcut şifreniz yanlış!");
+        return;
       }
+      console.log("passwords matched");
+      console.log(newPassword);
+      console.log(userData);
+      await updateUserApi(username, { ...userData, password: newPassword});
+      toast.success("Parolanız başarıyla güncellendi!");
+      setNewPassword("");
+      setOldPassword("");
+      setPasswordError(null);
+    } catch (error) {
+      console.error("Error changing password:", error);
+      toast.error("Parola güncellenirken hata!");
     }
   };
 
