@@ -169,11 +169,55 @@ public class UserResource {
         try {
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
+            
             String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (!username.equals(currentUsername) && !user.isAdmin()) {
+            User currentUser = userRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            if (!username.equals(currentUsername) && !currentUser.isAdmin()) {
                 return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
             }
             return new ResponseEntity<>(user.getOrders(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users/{username}/wishlist")
+    public ResponseEntity<?> getWishlistByUsername(@PathVariable String username) {
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            if (!username.equals(currentUsername) && !currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(user.getWishlist(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users/{username}/cart")
+    public ResponseEntity<?> getCartByUsername(@PathVariable String username) {
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            if (!username.equals(currentUsername) && !currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(user.getCart(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
