@@ -8,12 +8,21 @@ import {
   updateUserApi,
   getCartByUsername,
   getOrdersByUsername,
-  getWishlistByUsername
+  getWishlistByUsername,
 } from "../api/UserApiService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminUserUpdate: React.FC = () => {
   const { username } = useParams<{ username: string }>();
-  const [userData, setUserData] = useState<UserForm | null>(null);
+  const [userData, setUserData] = useState<UserForm>({
+    username: "",
+    email: "",
+    address: "",
+    phoneNumber: "",
+    password: "",
+    isAdmin: false,
+  }); 
   const [isCreating, setIsCreating] = useState<boolean>(true);
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [cart, setCart] = useState<Cart | null>(null);
@@ -24,7 +33,14 @@ const AdminUserUpdate: React.FC = () => {
       setIsCreating(false);
       getUserByUsernameApi(username)
         .then((response) => {
-          setUserData(response.data);
+          setUserData({
+            username: response.data.username,
+            email: response.data.email,
+            address: response.data.address,
+            phoneNumber: response.data.phoneNumber,
+            password: "",
+            isAdmin: response.data.admin, // Update isAdmin
+          });
         })
         .catch((error) => console.error("Error fetching user: ", error));
 
@@ -51,49 +67,48 @@ const AdminUserUpdate: React.FC = () => {
       // Create user
       try {
         await createUserApi(userData);
-        alert("User created successfully!");
+        toast.success("Kullanıcı başarıyla oluşturuldu!");
       } catch (error) {
-        console.error("Error creating user:", error);
+        toast.error("Kullanıcı oluştururken hata!" + error);
       }
     } else {
       // Update user
       try {
         await updateUserApi(username, userData);
-        alert("User updated successfully!");
+        toast.success("Kullanıcı başarıyla güncellendi!");
       } catch (error) {
-        console.error("Error updating user:", error);
+        toast.error("Kullanıcı güncellenirken hata!" + error);
       }
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (userData) {
-      const { name, value, type, checked } = e.target;
-      setUserData({
-        ...userData,
-        [name]: type === "checkbox" ? checked : value,
-      });
-    }
+    const { name, value, type, checked } = e.target;
+    setUserData({
+      ...userData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   return (
     <div className="container">
-      <h2>{isCreating ? "Create User" : "Update User"}</h2>
-      //TODO: update button throws 400, handle the type of userData 
+      <br />
+      <h2>{isCreating ? "Kullanıcı Oluştur" : "Kullanıcıyı Güncelle"}</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
+          <Form.Label>Kullanıcı Adı</Form.Label>
           <Form.Control
             type="text"
             name="username"
             value={userData?.username || ""}
             onChange={handleInputChange}
             placeholder="Enter username"
+            disabled={!isCreating}
           />
         </Form.Group>
 
         <Form.Group controlId="formEmail">
-          <Form.Label>Email</Form.Label>
+          <Form.Label>E-mail</Form.Label>
           <Form.Control
             type="email"
             name="email"
@@ -125,58 +140,90 @@ const AdminUserUpdate: React.FC = () => {
           />
         </Form.Group>
 
-        //TODO: centeralize this
+        {/* Password Field only when creating */}
+        {isCreating && (
+          <Form.Group controlId="formPassword">
+            <Form.Label>Şifre</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={userData?.password || ""}
+              onChange={handleInputChange}
+              placeholder="Enter password"
+            />
+          </Form.Group>
+        )}
 
-        <Form.Group controlId="formIsAdmin" style={{display:"flex", justifyContent:"center", marginTop:"10px"}}>
+        <Form.Group
+          controlId="formIsAdmin"
+          className="text-center mt-3"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Form.Check
             type="checkbox"
-            name="isAdmin"
+            name="isAdmin" // Ensure name matches state
             label="Admin"
-            checked={userData?.admin || false}
+            checked={userData?.isAdmin || false} // Ensure checked matches state
             onChange={handleInputChange}
           />
         </Form.Group>
 
-        //TODO: if empty say the lists are empty
-
         {!isCreating && (
           <>
             <div>
-              <h3>Wishlist Items</h3>
+              <h3>Favoriler</h3>
               {wishlist ? (
-                wishlist.wishlistItems.map((item) => (
-                  <div key={item.id}>
-                    {item.product.name} - {item.product.price}
-                  </div>
-                ))
+                wishlist.wishlistItems && wishlist.wishlistItems.length > 0 ? (
+                  wishlist.wishlistItems.map((item) => (
+                    <div key={item.id}>
+                      {item.product.name} - {item.product.price}
+                    </div>
+                  ))
+                ) : (
+                  <p>Favorilerde ürün bulunamadı.</p>
+                )
               ) : (
-                <p>Loading wishlist...</p>
+                <p>Favoriler yükleniyor...</p>
               )}
             </div>
 
             <div>
-              <h3>Cart Items</h3>
+              <h3>Sepetteki Ürünler</h3>
               {cart ? (
-                cart.cartItems.map((item) => (
-                  <div key={item.id}>
-                    {item.product.name} - {item.product.price} x {item.quantity}
-                  </div>
-                ))
+                cart.cartItems && cart.cartItems.length > 0 ? (
+                  cart.cartItems.map((item) => (
+                    <div key={item.id}>
+                      {item.product.name} - {item.product.price} x{" "}
+                      {item.quantity}
+                    </div>
+                  ))
+                ) : (
+                  <p>Sepette ürün bulunamadı.</p>
+                )
               ) : (
-                <p>Loading cart...</p>
+                <p>Sepetteki ürünler yükleniyor...</p>
               )}
             </div>
 
             <div>
-              <h3>Orders</h3>
+              <h3>Siparişler</h3>
               {orders ? (
-                orders.map((order) => (
-                  <div key={order.id}>
-                    Order #{order.id} - {order.totalPrice}
-                  </div>
-                ))
+                orders.length > 0 ? (
+                  orders.map((order) => (
+                    <div key={order.id}>
+                      Sipariş #{order.id} - {order.totalPrice}
+                    </div>
+                  ))
+                ) : (
+                  <p>Sipariş bulunamadı.</p>
+                )
               ) : (
-                <p>Loading orders...</p>
+                <p>Siparişler yükleniyor...</p>
               )}
             </div>
           </>
@@ -186,6 +233,9 @@ const AdminUserUpdate: React.FC = () => {
           {isCreating ? "Oluştur" : "Güncelle"}
         </Button>
       </Form>
+
+      {/* Toast notifications */}
+      <ToastContainer />
     </div>
   );
 };

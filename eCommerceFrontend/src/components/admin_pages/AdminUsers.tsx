@@ -35,7 +35,7 @@ const AdminUsers: React.FC = () => {
         await deleteUserApi(userId);
         fetchUsers();
       } catch (error) {
-        console.error('Ürün silinirken hata: ', error);
+        console.error('Kullanıcı silinirken hata: ', error);
       }
     }
   };
