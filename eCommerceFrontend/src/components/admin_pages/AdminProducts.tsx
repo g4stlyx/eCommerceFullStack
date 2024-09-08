@@ -69,10 +69,10 @@ const AdminProducts: React.FC = () => {
               <td>{product.quantity}</td>
               <td>
                 <Button variant="warning" onClick={() => handleEditProduct(product.id)} className="me-2">
-                  Edit
+                  Güncelle
                 </Button>
                 <Button variant="danger" onClick={() => handleDeleteProduct(product.id)}>
-                  Delete
+                  Sil
                 </Button>
               </td>
             </tr>

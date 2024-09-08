@@ -127,16 +127,18 @@ public class UserResource {
             usertoUpdate.setPhoneNumber(userDetails.getPhoneNumber());
             usertoUpdate.setAddress(userDetails.getAddress());
 
-            if(userWhoUpdate.isAdmin()){
+            if (userWhoUpdate.isAdmin()) {
                 usertoUpdate.setAdmin(userDetails.isAdmin());
             }
 
-            String hashedPassword = passwordEncoder.encode(userDetails.getPassword());
-            usertoUpdate.setPassword(hashedPassword);
+            if (userDetails.getPassword() != "" || !userDetails.getPassword().isBlank()
+                    || !userDetails.getPassword().isEmpty()) {
+                String hashedPassword = passwordEncoder.encode(userDetails.getPassword());
+                usertoUpdate.setPassword(hashedPassword);
+            }
             User updatedUser = userRepository.save(usertoUpdate);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

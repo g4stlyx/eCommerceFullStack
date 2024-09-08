@@ -30,6 +30,7 @@ import ProductsBySearch from "./components/ProductsBySearch";
 import ProductDetailed from "./components/ProductDetailed";
 import Reviews from "./components/user_pages/Reviews";
 import Faq from "./components/Faq";
+import AdminUserUpdate from "./components/admin_pages/AdminUserUpdate";
 
 const App: React.FC = () => {
   return (
@@ -202,6 +203,14 @@ const App: React.FC = () => {
             element={
               <AdminRoute>
                 <AdminUsers />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/administrator/users/:username/edit"
+            element={
+              <AdminRoute>
+                <AdminUserUpdate />
               </AdminRoute>
             }
           />

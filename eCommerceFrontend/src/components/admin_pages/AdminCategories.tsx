@@ -75,13 +75,13 @@ const AdminCategories: React.FC = () => {
                   onClick={() => handleEditCategory(category.id)}
                   className="me-2"
                 >
-                  Edit
+                  Güncelle
                 </Button>
                 <Button
                   variant="danger"
                   onClick={() => deleteCategory(category.id)}
                 >
-                  Delete
+                  Sil
                 </Button>
               </td>
             </tr>

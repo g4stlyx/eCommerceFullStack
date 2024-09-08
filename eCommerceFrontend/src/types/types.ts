@@ -41,6 +41,7 @@ export interface User{
     id: number;
     username: string;
     password: string;
+    admin?:boolean;
     isAdmin: boolean;
     email:string | null;
     phoneNumber: string | null;
@@ -51,7 +52,7 @@ export interface User{
     wishlist: Wishlist | null;
 }
 
-export interface UserSignUp{
+export interface UserForm{
     username: string;
     password?: string;
     isAdmin: boolean;

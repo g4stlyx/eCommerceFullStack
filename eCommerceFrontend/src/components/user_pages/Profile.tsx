@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Tab, Tabs, Form, Button, Container, Row, Col } from "react-bootstrap";
 import { getUserByUsernameApi, updateUserApi } from "../api/UserApiService";
 import { useAuth } from "../security/AuthContext";
-import { UserSignUp } from "../../types/types";
+import { UserForm } from "../../types/types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import bcrypt from "bcryptjs";
@@ -11,7 +11,7 @@ const Profile: React.FC = () => {
   const authContext = useAuth();
   const username = authContext.username;
 
-  const [userData, setUserData] = useState<UserSignUp | null>(null);
+  const [userData, setUserData] = useState<UserForm | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
