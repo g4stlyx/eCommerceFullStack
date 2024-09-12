@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import { UserForm, Wishlist, Cart, Order } from "../../types/types";
+import { UserForm, Wishlist, CartType, Order } from "../../types/types";
 import {
   createUserApi,
   getUserByUsernameApi,
@@ -25,7 +25,7 @@ const AdminUserUpdate: React.FC = () => {
   }); 
   const [isCreating, setIsCreating] = useState<boolean>(true);
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<CartType | null>(null);
   const [orders, setOrders] = useState<Order[] | null>(null);
 
   useEffect(() => {
