@@ -184,6 +184,26 @@ public class UserResource {
         }
     }
 
+    @GetMapping("/users/{username}/reviews")
+    public ResponseEntity<?> getReviewsByUsername(@PathVariable String username) {
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+            User currentUser = userRepository.findByUsername(currentUsername)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            if (!username.equals(currentUsername) && !currentUser.isAdmin()) {
+                return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
+            }
+            return new ResponseEntity<>(user.getReviews(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/users/{username}/wishlist")
     public ResponseEntity<?> getWishlistByUsername(@PathVariable String username) {
         try {

@@ -19,6 +19,15 @@ export const getOrdersByUsername = (username: string) =>
     }
   });
 
+export const getReviewsByUsername = (username: string) =>
+  apiClient.get(`/users/${username}/reviews`).catch((error) => {
+    if (error.response.status === 403) {
+      throw new Error("You are not authorized to see these reviews.");
+    } else {
+      throw error;
+    }
+  });
+
 export const getWishlistByUsername = (username: string) =>
   apiClient.get(`/users/${username}/wishlist`).catch((error) => {
     if (error.response.status === 403) {
