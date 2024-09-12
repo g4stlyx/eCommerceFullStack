@@ -1,0 +1,17 @@
+.orders-container {
+  min-height: 70vh;
+}
+
+.order-card {
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+}
+
+h2 {
+  color: #343a40;
+  font-weight: bold;
+}

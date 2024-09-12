@@ -1,6 +1,7 @@
 package com.g4stly.eCommerce.controllers;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +21,8 @@ import com.g4stly.eCommerce.repositories.UserRepository;
 import com.g4stly.eCommerce.models.User;
 import java.util.Optional;
 
-
 class UserResourceTest {
-    
+
     @InjectMocks
     private UserResource userResource;
     @Mock
@@ -121,14 +121,31 @@ class UserResourceTest {
     @Test
     void testGetOrdersByUsername_AccessDenied() {
         String username = "testUser";
-        User user = new User();
-        user.setUsername("otherUser");
+        String otherUsername = "otherUser";
 
+        // Mocking the SecurityContext and Authentication
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn(username);
-        when(userRepository.findByUsername("otherUser")).thenReturn(Optional.of(user));
+        SecurityContextHolder.setContext(securityContext);
 
-        ResponseEntity<?> response = userResource.getOrdersByUsername("otherUser");
+        // Mocking the user repository
+        User user = new User();
+        user.setUsername(otherUsername);
+        when(userRepository.findByUsername(otherUsername)).thenReturn(Optional.of(user));
 
+        // Mock current user as a non-admin
+        User currentUser = new User();
+        currentUser.setUsername(username);
+        currentUser.setAdmin(false);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(currentUser));
+
+        // Test the method
+        ResponseEntity<?> response = userResource.getOrdersByUsername(otherUsername);
+
+        // Assert that the status is 403 Forbidden
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
