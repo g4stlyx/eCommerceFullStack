@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Container, Spinner, Alert } from 'react-bootstrap';
-import {Order} from "../../types/types"
-import { getAllOrdersApi } from '../api/OrderApiService';
+import React, { useEffect, useState } from "react";
+import { Table, Container, Spinner, Alert } from "react-bootstrap";
+import { Order } from "../../types/types";
+import { getAllOrdersApi } from "../api/OrderApiService";
 
 const AdminOrders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -12,9 +12,10 @@ const AdminOrders: React.FC = () => {
     const fetchOrders = async () => {
       try {
         const response = await getAllOrdersApi();
+        console.log(response.data);
         setOrders(response.data);
       } catch (err) {
-        setError('Failed to fetch orders: '+err);
+        setError("Failed to fetch orders: " + err);
       } finally {
         setLoading(false);
       }
@@ -47,10 +48,14 @@ const AdminOrders: React.FC = () => {
               <tr key={order.id}>
                 <td>{order.id}</td>
                 <td>{order.user.username}</td>
-                <td>{order.orderItems.map((orderItem)=>(<td key={orderItem.id}>{orderItem.product.name}</td>))}</td>
+                <td>
+                  {order.orderItems.map((orderItem) => (
+                    <div key={orderItem.id}>{orderItem.product.name}</div>
+                  ))}
+                </td>
                 <td>{order.status}</td>
                 <td>{order.totalPrice}</td>
-                <td>{order.orderDate.toUTCString()}</td>
+                <td>{new Date(order.orderDate).toUTCString()}</td>
               </tr>
             ))}
           </tbody>

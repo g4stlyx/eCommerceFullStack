@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CartItem, WishlistItem } from "../../types/types";
+import { CartType, CartItem, WishlistItem } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import {
+  createOrderFromCartApi,
   getCartApi,
   removeItemFromCartApi,
   updateItemQuantityApi,
@@ -24,6 +25,7 @@ import { handleAddToCart } from "../../utils/utils";
 import { useModalContext } from "../../context/ModalContext";
 
 const Cart: React.FC = () => {
+  const [cart, setCart] = useState<CartType>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -31,7 +33,7 @@ const Cart: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
-  const {setShowModal, setModalMessage} = useModalContext();
+  const { setShowModal, setModalMessage } = useModalContext();
 
   useEffect(() => {
     fetchCart();
@@ -42,6 +44,7 @@ const Cart: React.FC = () => {
     try {
       setLoading(true);
       const response = await getCartApi();
+      setCart(response.data);
       setCartItems(response.data.cartItems);
       calculateTotalPrice(response.data.cartItems);
     } catch (error) {
@@ -57,6 +60,16 @@ const Cart: React.FC = () => {
       setWishlistItems(response.data.wishlistItems);
     } catch (error) {
       setError("Failed to fetch wishlist: " + error);
+    }
+  };
+
+  const createOrderFromCart = async () => {
+    if (!cart) return;
+    try {
+      await createOrderFromCartApi(cart.id);
+      navigate(`/profile/orders`);
+    } catch (error) {
+      setError("Failed to create order: " + error);
     }
   };
 
@@ -150,7 +163,13 @@ const Cart: React.FC = () => {
                             </Card.Text>
                             <Button
                               variant="primary"
-                              onClick={() => handleAddToCart(wishlistItem.id, setShowModal, setModalMessage)}
+                              onClick={() =>
+                                handleAddToCart(
+                                  wishlistItem.id,
+                                  setShowModal,
+                                  setModalMessage
+                                )
+                              }
                             >
                               <FaShoppingCart /> Sepete Ekle
                             </Button>
@@ -244,7 +263,8 @@ const Cart: React.FC = () => {
                   <h3>Toplam: {totalPrice.toFixed(2)} ₺</h3>
                   <Button
                     variant="primary"
-                    onClick={() => navigate("/checkout")}
+                    onClick={()=> createOrderFromCart()}
+                    // onClick={() => navigate("/checkout")}
                   >
                     Ödemeye Git
                   </Button>

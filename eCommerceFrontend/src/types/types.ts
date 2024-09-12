@@ -48,7 +48,7 @@ export interface User{
     address: string | null;
     orders: Order[] | null; 
     reviews: Review[] | null;
-    cart: Cart | null;
+    cart: CartType | null;
     wishlist: Wishlist | null;
 }
 
@@ -109,7 +109,7 @@ export interface OrderItem{
     quantity:number;
 }
 
-export interface Cart{
+export interface CartType{
     id:number;
     user:User;
     cartItems: CartItem[];
@@ -117,7 +117,7 @@ export interface Cart{
 
 export interface CartItem{
     id:number;
-    cart: Cart;
+    cart: CartType;
     product: Product;
     quantity:number;
 }
