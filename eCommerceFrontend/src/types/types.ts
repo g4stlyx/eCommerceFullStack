@@ -93,6 +93,12 @@ export interface Review{
     updatedAt: Date;
 }
 
+export interface ReviewForm{
+    rating: number;
+    title: string;
+    text: string;
+}
+
 export interface Order{
     id:number;
     user: User;

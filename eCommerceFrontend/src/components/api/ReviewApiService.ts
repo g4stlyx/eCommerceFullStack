@@ -1,4 +1,4 @@
-import { Review } from "../../types/types";
+import { ReviewForm, Review } from "../../types/types";
 import { apiClient } from "./ApiClient";
 
 export const getReviewsByProductIdApi = (productId: number) => {
@@ -19,7 +19,7 @@ export const getReviewApi = (productId: number, reviewId: number) => {
     });
 };
 
-export const createReviewApi = (productId: number, review: Review) => {
+export const createReviewApi = (productId: number, review: ReviewForm) => {
   return apiClient
     .post(`/products/${productId}/reviews`, review)
     .catch((error) => {

@@ -5,7 +5,10 @@ import {
   searchAndFilterProductsApi,
 } from "./api/ProductApiService";
 import { handleAddToCart, handleAddToWishlist } from "../utils/utils";
-import { getReviewsByProductIdApi } from "./api/ReviewApiService";
+import {
+  getReviewsByProductIdApi,
+  createReviewApi,
+} from "./api/ReviewApiService";
 import {
   Container,
   Row,
@@ -13,10 +16,11 @@ import {
   Image,
   Button,
   Card,
+  Form,
 } from "react-bootstrap";
 import { Product, Review } from "../types/types";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/productDetailed.css";
 import LoginModal from "../utils/LoginModal";
@@ -28,7 +32,11 @@ const ProductDetailed: React.FC = () => {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const {setModalMessage, setShowModal} = useModalContext();
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewTitle, setReviewTitle] = useState("");
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState<number>(1);
+  const { setModalMessage, setShowModal } = useModalContext();
 
   useEffect(() => {
     getProductByIdApi(Number(productId))
@@ -64,6 +72,23 @@ const ProductDetailed: React.FC = () => {
     setCarouselIndex((prevIndex) =>
       prevIndex === relatedProducts.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createReviewApi(Number(productId), {
+      title: reviewTitle,
+      text: reviewText,
+      rating: reviewRating,
+    })
+      .then(() => {
+        toast.success("Değerlendirme başarılı.")
+      })
+      .catch((err) => {
+        toast.error("Değerlendirme başarısız: ",err);
+      });
+
+    setShowReviewForm(false);
   };
 
   return (
@@ -194,7 +219,67 @@ const ProductDetailed: React.FC = () => {
             </Card>
           ))
         ) : (
-          <p>Henüz bir değerlendirme yapılmadı.</p>
+          <div>
+            <p>Henüz bir değerlendirme yapılmadı.</p>
+          </div>
+        )}
+
+        {/* Write a Review Button */}
+        <Button
+          variant="primary"
+          className="mt-3"
+          onClick={() => setShowReviewForm(!showReviewForm)}
+        >
+          Değerlendir
+        </Button>
+
+        {/* Review Form */}
+        {showReviewForm && (
+          <Card className="mt-3">
+            <Card.Body>
+              <Form onSubmit={handleReviewSubmit}>
+                <Form.Group className="mb-3" controlId="reviewTitle">
+                  <Form.Label>Başlık</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter title"
+                    value={reviewTitle}
+                    onChange={(e) => setReviewTitle(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="reviewText">
+                  <Form.Label>Değerlendirmeniz</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="Enter your review"
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="reviewRating">
+                  <Form.Label>Derecesi ?/5</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Rate out of 5"
+                    value={reviewRating}
+                    onChange={(e) => setReviewRating(parseInt(e.target.value))}
+                    min={1}
+                    max={5}
+                    required
+                  />
+                </Form.Group>
+
+                <Button variant="success" type="submit">
+                  Değerlendir
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
         )}
       </Container>
 

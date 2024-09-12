@@ -21,7 +21,7 @@ const Reviews: React.FC = () => {
       }
     };
     fetchReviews();
-  }, []);
+  }, [username]);
 
 
   return (
@@ -35,7 +35,7 @@ const Reviews: React.FC = () => {
                 <Card.Body>
                   <Card.Title>{review.product.name}</Card.Title>
                   <Card.Text>
-                    <div>{review.rating} - {review.title}</div>
+                    <div>{review.rating}/5 - {review.title}</div>
                     <div>{review.text}</div>
                   </Card.Text>
                 </Card.Body>
