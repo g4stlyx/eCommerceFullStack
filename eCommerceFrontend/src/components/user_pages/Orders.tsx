@@ -53,7 +53,7 @@ const Orders: React.FC = () => {
                     <Card.Text>
                       <strong>Sipariş Durumu: </strong> {order.status}
                     </Card.Text>
-                    <Card.Link href={`/orders/${order.id}`}>Detayları İncele</Card.Link>
+                    <Card.Link href={`/profile/orders/${order.id}`}>Detayları İncele</Card.Link>
                   </Card.Body>
                 </Card>
               </Col>

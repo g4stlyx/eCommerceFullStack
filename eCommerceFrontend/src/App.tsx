@@ -151,7 +151,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/profile/orders/:orderId"
+            path="/profile/orders/:order_id"
             element={
               <AuthenticatedRoute>
                 <OrderDetailed />

@@ -1,0 +1,11 @@
+.order-detailed-container {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-dark th {
+  background-color: #343a40;
+  color: white;
+}
