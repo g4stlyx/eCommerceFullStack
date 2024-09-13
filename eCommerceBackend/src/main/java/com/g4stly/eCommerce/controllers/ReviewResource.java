@@ -38,6 +38,24 @@ public class ReviewResource {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/reviews")
+    public ResponseEntity<?> getAllReviews() {
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            if (!user.isAdmin()) {
+                return new ResponseEntity<>("You are not authorized to view this resource: getting all orders",
+                        HttpStatus.UNAUTHORIZED);
+            }
+
+            return new ResponseEntity<>(reviewRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/products/{product_id}/reviews")
     public ResponseEntity<?> getReviewsByProductId(@PathVariable Integer product_id) {
         try {

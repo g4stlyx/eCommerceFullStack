@@ -1,6 +1,16 @@
 import { ReviewForm, Review } from "../../types/types";
 import { apiClient } from "./ApiClient";
 
+export const getAllReviewsApi = () => {
+  return apiClient.get(`/reviews`).catch((error) => {
+    if (error.response.status === 403) {
+      throw new Error("You are not authorized to get all reviews.");
+    } else {
+      throw error;
+    }
+  });
+};
+
 export const getReviewsByProductIdApi = (productId: number) => {
   return apiClient.get(`/products/${productId}/reviews`).catch((error) => {
     throw error;
@@ -45,9 +55,9 @@ export const updateReviewApi = (
     });
 };
 
-export const deleteReviewApi = (productId: number, reviewId: number) => {
+export const deleteReviewApi = (product_id: number, review_id: number) => {
   return apiClient
-    .delete(`/products/${productId}/${reviewId}`)
+    .delete(`/products/${product_id}/${review_id}`)
     .catch((error) => {
       if (error.response.status === 403) {
         throw new Error("You are not authorized to delete this review.");

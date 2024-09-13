@@ -110,6 +110,11 @@ const Header: React.FC = () => {
                 Siparişleri Yönet
               </Nav.Link>
             )}
+            {isAdmin && (
+              <Nav.Link href="/administrator/reviews" style={{ color: "red" }}>
+                Değerlendirmeleri Yönet
+              </Nav.Link>
+            )}
           </Nav>
         </Container>
       </div>
@@ -190,12 +195,8 @@ const Header: React.FC = () => {
                   }
                   id="account-dropdown"
                 >
-                  <NavDropdown.Item href="/login">
-                    Giriş Yap
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/sign-up">
-                    Üye Ol
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/login">Giriş Yap</NavDropdown.Item>
+                  <NavDropdown.Item href="/sign-up">Üye Ol</NavDropdown.Item>
                 </NavDropdown>
               )}
               <Nav.Link href="/profile/wishlist">

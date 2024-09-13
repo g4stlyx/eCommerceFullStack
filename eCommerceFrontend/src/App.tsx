@@ -31,6 +31,7 @@ import ProductDetailed from "./components/ProductDetailed";
 import Reviews from "./components/user_pages/Reviews";
 import Faq from "./components/Faq";
 import AdminUserUpdate from "./components/admin_pages/AdminUserUpdate";
+import AdminReviews from "./components/admin_pages/AdminReviews";
 
 const App: React.FC = () => {
   return (
@@ -195,6 +196,14 @@ const App: React.FC = () => {
             element={
               <AdminRoute>
                 <AdminOrders />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/administrator/reviews"
+            element={
+              <AdminRoute>
+                <AdminReviews />
               </AdminRoute>
             }
           />
