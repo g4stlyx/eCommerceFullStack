@@ -94,7 +94,7 @@ const ProductDetailed: React.FC = () => {
         toast.success("Değerlendirme başarılı.");
       })
       .catch((err) => {
-        toast.error("Değerlendirme başarısız: "+ err.message);
+        toast.error(err.message);
       });
 
     setShowReviewForm(false);

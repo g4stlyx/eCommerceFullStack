@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.g4stly.eCommerce.models.Product;
 import com.g4stly.eCommerce.models.Review;
 import com.g4stly.eCommerce.models.User;
+import com.g4stly.eCommerce.repositories.OrderRepository;
 import com.g4stly.eCommerce.repositories.ProductRepository;
 import com.g4stly.eCommerce.repositories.ReviewRepository;
 import com.g4stly.eCommerce.repositories.UserRepository;
@@ -31,12 +32,14 @@ public class ReviewResource {
     private ProductRepository productRepository;
     private ReviewRepository reviewRepository;
     private UserRepository userRepository;
+    private OrderRepository orderRepository;
 
     public ReviewResource(ReviewRepository reviewRepository, ProductRepository productRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, OrderRepository orderRepository) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/reviews")
@@ -100,6 +103,14 @@ public class ReviewResource {
             if (existingReview.isPresent()) {
                 // Return 400 Bad Request if the user already reviewed this product
                 return new ResponseEntity<>("Bu ürünü zaten değerlendirdiniz.", HttpStatus.BAD_REQUEST);
+            }
+
+            // Check if the user has purchased this product
+            boolean hasPurchased = orderRepository.existsByUserAndOrderItemsProduct(user, product);
+            if (!hasPurchased) {
+                // Return 400 Bad Request if the user hasn't bought the product
+                return new ResponseEntity<>("Ürünü değerlendirmek için daha önce satın almış olmanız gerekmektedir.",
+                        HttpStatus.BAD_REQUEST);
             }
 
             review.setUser(user);
