@@ -1,4 +1,4 @@
-import { ReviewForm, Review } from "../../types/types";
+import { ReviewForm } from "../../types/types";
 import { apiClient } from "./ApiClient";
 
 export const getAllReviewsApi = () => {
@@ -40,10 +40,10 @@ export const createReviewApi = (productId: number, review: ReviewForm) => {
 export const updateReviewApi = (
   productId: number,
   reviewId: number,
-  review: Review
+  review: ReviewForm
 ) => {
   return apiClient
-    .put(`/products/${productId}/${reviewId}`, review)
+    .put(`/products/${productId}/reviews/${reviewId}`, review)
     .catch((error) => {
       if (error.response.status === 403) {
         throw new Error("You are not authorized to update this review.");
