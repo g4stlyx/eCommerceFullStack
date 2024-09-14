@@ -2,32 +2,40 @@ import React, { useEffect, useState } from "react";
 import { Category, Product } from "../types/types";
 import { getAllProductsApi } from "./api/ProductApiService";
 import { getAllCategoriesApi } from "./api/CategoryApiService";
-import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Card, ListGroup, Spinner } from "react-bootstrap";
 import "../styles/mainPage.css";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import LoginModal from "../utils/LoginModal";
 import ProductCard from "../utils/ProductCard";
 
 const MainPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState<boolean>(true);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoadingProducts(true);
       try {
         const response = await getAllProductsApi();
         setProducts(response.data);
       } catch (error) {
-        console.error("Failed to fetch products", error);
+        toast.error("Failed to fetch products: " + error);
+      } finally {
+        setLoadingProducts(false);
       }
     };
 
     const fetchCategories = async () => {
+      setLoadingCategories(true);
       try {
         const response = await getAllCategoriesApi();
         setCategories(response.data);
       } catch (error) {
-        console.error("Failed to fetch categories", error);
+        toast.error("Failed to fetch categories: " + error);
+      } finally {
+        setLoadingCategories(false);
       }
     };
 
@@ -43,28 +51,40 @@ const MainPage: React.FC = () => {
           <Card className="mb-4">
             <Card.Header as="h4">Categories</Card.Header>
             <ListGroup variant="flush">
-              {categories.map((category) => (
-                <a
-                  key={category.id}
-                  href={`/categories/${category.name}`}
-                  className="text-decoration-none"
-                >
-                  <ListGroup.Item className="category-item">
-                    {category.name}
-                  </ListGroup.Item>
-                </a>
-              ))}
+              {loadingCategories ? (
+                <div className="d-flex justify-content-center">
+                  <Spinner animation="border" />
+                </div>
+              ) : (
+                categories.map((category) => (
+                  <a
+                    key={category.id}
+                    href={`/categories/${category.name}`}
+                    className="text-decoration-none"
+                  >
+                    <ListGroup.Item className="category-item">
+                      {category.name}
+                    </ListGroup.Item>
+                  </a>
+                ))
+              )}
             </ListGroup>
           </Card>
         </Col>
 
         {/* Product Grid */}
         <Col md={9}>
-          <Row xs={1} md={3} className="g-4">
-            {products.map((product) => (
-              <ProductCard product={product} key={product.id}/>
-            ))}
-          </Row>
+          {loadingProducts ? (
+            <div className="d-flex justify-content-center">
+              <Spinner animation="border" />
+            </div>
+          ) : (
+            <Row xs={1} md={3} className="g-4">
+              {products.map((product) => (
+                <ProductCard product={product} key={product.id} />
+              ))}
+            </Row>
+          )}
         </Col>
       </Row>
 

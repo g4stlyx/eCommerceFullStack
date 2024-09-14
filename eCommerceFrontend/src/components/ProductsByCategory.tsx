@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Product } from "../types/types";
 import { searchAndFilterProductsApi } from "./api/ProductApiService";
-import { Button, Modal, Row } from "react-bootstrap";
+import { Button, Modal, Row, Spinner } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
 import ProductCard from "../utils/ProductCard";
 import { useModalContext } from "../context/ModalContext";
@@ -31,7 +31,15 @@ const ProductsByCategory: React.FC = () => {
     fetchProducts();
   }, [category]);
 
-  if (loading) return <div>Yükleniyor...</div>;
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -42,16 +50,16 @@ const ProductsByCategory: React.FC = () => {
       <div className="products-grid" style={{ margin: "5px 25px" }}>
         <Row xs={1} md={3} className="g-4">
           {products.length > 0 ? (
-            products.map((product) => <ProductCard product={product} key={product.id} />)
+            products.map((product) => (
+              <ProductCard product={product} key={product.id} />
+            ))
           ) : (
             <div>Bu kategoriye ait ürün bulunamadı.</div>
           )}
         </Row>
       </div>
-      
       {/* Toast notifications */}
       <ToastContainer />
-      
       {/* Modal for login/signup */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>

@@ -17,6 +17,7 @@ import {
   Button,
   Card,
   Form,
+  Spinner,
 } from "react-bootstrap";
 import { Product, Review } from "../types/types";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
@@ -60,7 +61,15 @@ const ProductDetailed: React.FC = () => {
       .catch((error) => console.log(error));
   }, [productId]);
 
-  if (!product) return <div>Loading...</div>;
+  if (!product)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
 
   const handlePrev = () => {
     setCarouselIndex((prevIndex) =>
@@ -82,10 +91,10 @@ const ProductDetailed: React.FC = () => {
       rating: reviewRating,
     })
       .then(() => {
-        toast.success("Değerlendirme başarılı.")
+        toast.success("Değerlendirme başarılı.");
       })
       .catch((err) => {
-        toast.error("Değerlendirme başarısız: ",err);
+        toast.error("Değerlendirme başarısız: ", err);
       });
 
     setShowReviewForm(false);

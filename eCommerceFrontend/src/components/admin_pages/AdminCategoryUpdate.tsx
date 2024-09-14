@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCategoryByIdApi, createCategoryApi, updateCategoryApi } from "../api/CategoryApiService";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { Category } from "../../types/types";
 
 const AdminCategoryUpdate: React.FC = () => {
@@ -14,7 +14,8 @@ const AdminCategoryUpdate: React.FC = () => {
   });
   const { category_id } = useParams<{ category_id: string }>();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const isEditing = category_id !== "-1";
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const AdminCategoryUpdate: React.FC = () => {
   }, [category_id, isEditing, navigate]);
 
   const fetchCategoryById = async (id: number) => {
+    setLoading(true);
     try {
       const response = await getCategoryByIdApi(id);
       if (!response.data) {
@@ -38,7 +40,10 @@ const AdminCategoryUpdate: React.FC = () => {
       setCategory(response.data);
     } catch (error) {
       console.error("Error fetching category", error);
+      setError("Error fetching category: "+ error);
       navigate("/not-found");
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -62,9 +67,21 @@ const AdminCategoryUpdate: React.FC = () => {
     }
   };
 
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error) return <div>{error}</div>;
+
   return (
     <div className="admin-category-update-container">
-      <h2>{isEditing ? "Kategori Güncelle" : "Kategori Ekle"}</h2>
+      <br />
+      <h2>{isEditing ? "Kategori Güncelle" : "Kategori Ekle"}</h2> <br />
       <Form onSubmit={handleSubmit} className="container">
         <Form.Group controlId="formCategoryName" className="mb-3">
           <Form.Label>İsim</Form.Label>

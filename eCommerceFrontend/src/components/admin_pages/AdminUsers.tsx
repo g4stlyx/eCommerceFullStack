@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import { getAllUsersApi, deleteUserApi } from '../api/UserApiService';
 import { User } from '../../types/types';
 
 const AdminUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
+    setLoading(true)
     try {
       const response = await getAllUsersApi();
       setUsers(response.data);
     } catch (error) {
       console.error('Failed to fetch users:', error);
+      setError('Failed to fetch users: '+ error);
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -39,6 +45,17 @@ const AdminUsers: React.FC = () => {
       }
     }
   };
+
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error) return <div>{error}</div>;
 
   return (
     <div>

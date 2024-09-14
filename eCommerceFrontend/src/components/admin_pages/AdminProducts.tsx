@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import { getAllProductsApi, deleteProductApi } from '../api/ProductApiService';
 import { Product } from '../../types/types';
 
 const AdminProducts: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
+    setLoading(true)
     try {
       const response = await getAllProductsApi();
       setProducts(response.data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
+      setError('Failed to fetch products: '+ error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -39,6 +45,17 @@ const AdminProducts: React.FC = () => {
       }
     }
   };
+
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error) return <div>{error}</div>;
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { UserForm, Wishlist, CartType, Order } from "../../types/types";
 import {
   createUserApi,
@@ -22,15 +22,18 @@ const AdminUserUpdate: React.FC = () => {
     phoneNumber: "",
     password: "",
     isAdmin: false,
-  }); 
+  });
   const [isCreating, setIsCreating] = useState<boolean>(true);
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [cart, setCart] = useState<CartType | null>(null);
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (username && username !== "-1") {
       setIsCreating(false);
+      setLoading(true);
       getUserByUsernameApi(username)
         .then((response) => {
           setUserData({
@@ -41,21 +44,36 @@ const AdminUserUpdate: React.FC = () => {
             password: "",
             isAdmin: response.data.admin, // Update isAdmin
           });
+          setLoading(false);
         })
-        .catch((error) => console.error("Error fetching user: ", error));
+        .catch((error) => {
+          console.error("Error fetching user: ", error);
+          setError("Error fetching user: " + error);
+        });
 
       // Fetch wishlist, cart, and orders for the user
       getWishlistByUsername(username)
         .then((response) => setWishlist(response.data))
-        .catch((error) => console.error("Error fetching wishlist: ", error));
+        .catch((error) => {
+          console.error("Error fetching wishlist: ", error);
+          setError("Error fetching wishlist: " + error);
+        });
 
       getCartByUsername(username)
         .then((response) => setCart(response.data))
-        .catch((error) => console.error("Error fetching cart: ", error));
+        .catch((error) => {
+          console.error("Error fetching cart: ", error);
+          setError("Error fetching cart: " + error);
+        });
 
       getOrdersByUsername(username)
         .then((response) => setOrders(response.data))
-        .catch((error) => console.error("Error fetching orders: ", error));
+        .catch((error) => {
+          console.error("Error fetching orders: ", error);
+          setError("Error fetching orders: " + error);
+        });
+
+      setLoading(false);
     }
   }, [username]);
 
@@ -89,6 +107,17 @@ const AdminUserUpdate: React.FC = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
+
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="container">

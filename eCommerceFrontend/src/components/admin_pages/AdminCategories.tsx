@@ -4,23 +4,29 @@ import {
   getAllCategoriesApi,
   deleteCategoryApi,
 } from "../api/CategoryApiService";
-import { Button, Table } from "react-bootstrap";
+import { Button, Spinner, Table } from "react-bootstrap";
 import { Category } from "../../types/types";
 
 const AdminCategories: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getAllCategories();
   }, []);
 
   const getAllCategories = async () => {
+    setLoading(true);
     try {
       const response = await getAllCategoriesApi();
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories", error);
+      setError("Error fetching categories: "+ error);
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -46,12 +52,23 @@ const AdminCategories: React.FC = () => {
     navigate(`/administrator/categories/${categoryId}/edit`);
   };
 
+  if (loading)
+    return (
+      <div
+        className="d-flex justify-content-center"
+        style={{ marginTop: "20px" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  if (error) return <div>{error}</div>;
+
   return (
     <div className="admin-categories-container">
-      <h2>Kategorileri Yönet</h2>
+      <br /><h2>Kategorileri Yönet</h2>
       <Button variant="primary" onClick={handleAddCategory} className="mb-3">
-        Ekle
-      </Button>
+        Kategori Ekle
+      </Button><br /><br />
       <Table striped bordered hover>
         <thead>
           <tr>
