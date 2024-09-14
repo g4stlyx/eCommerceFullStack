@@ -57,7 +57,7 @@ export const updateReviewApi = (
 
 export const deleteReviewApi = (product_id: number, review_id: number) => {
   return apiClient
-    .delete(`/products/${product_id}/${review_id}`)
+    .delete(`/products/${product_id}/reviews/${review_id}`)
     .catch((error) => {
       if (error.response.status === 403) {
         throw new Error("You are not authorized to delete this review.");
