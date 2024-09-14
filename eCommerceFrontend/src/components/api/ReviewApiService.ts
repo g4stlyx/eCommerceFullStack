@@ -33,7 +33,9 @@ export const createReviewApi = (productId: number, review: ReviewForm) => {
   return apiClient
     .post(`/products/${productId}/reviews`, review)
     .catch((error) => {
-      throw error;
+      if (error.response.status === 400 && error.response.data === 'You have already reviewed this product.') {
+        throw new Error(error.response.data);
+      } 
     });
 };
 

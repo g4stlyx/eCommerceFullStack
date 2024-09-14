@@ -2,6 +2,7 @@ package com.g4stly.eCommerce.controllers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +94,13 @@ public class ReviewResource {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Check if the user has already reviewed this product
+            Optional<Review> existingReview = reviewRepository.findByProductAndUser(product, user);
+            if (existingReview.isPresent()) {
+                // Return 400 Bad Request if the user already reviewed this product
+                return new ResponseEntity<>("Bu ürünü zaten değerlendirdiniz.", HttpStatus.BAD_REQUEST);
+            }
 
             review.setUser(user);
             review.setProduct(product);
