@@ -16,9 +16,9 @@ const ProductsBySearch: React.FC = () => {
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [sortOption, setSortOption] = useState<string>("default"); // Sort option state
   const navigate = useNavigate();
   const { showModal, setShowModal, modalMessage } = useModalContext();
-
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -52,7 +52,7 @@ const ProductsBySearch: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // changes the query if smth searched by the header
+  // Changes the query if searched by the header
   useEffect(() => {
     setSearchCriteria((prevCriteria) => ({
       ...prevCriteria,
@@ -80,6 +80,22 @@ const ProductsBySearch: React.FC = () => {
 
     fetchProducts();
   }, [searchCriteria]);
+
+  // Sorting logic
+  const sortProducts = (products: Product[]) => {
+    switch (sortOption) {
+      case "nameAsc":
+        return [...products].sort((a, b) => a.name.localeCompare(b.name));
+      case "nameDesc":
+        return [...products].sort((a, b) => b.name.localeCompare(a.name));
+      case "priceLowHigh":
+        return [...products].sort((a, b) => a.price - b.price);
+      case "priceHighLow":
+        return [...products].sort((a, b) => b.price - a.price);
+      default:
+        return products;
+    }
+  };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setQuery(e.target.value);
@@ -162,6 +178,21 @@ const ProductsBySearch: React.FC = () => {
       </div>
 
       <div className="products-grid" style={{ margin: "25px 15px", flex: 1 }}>
+        <div className="d-flex justify-content-end mb-3">
+          {/* Sorting ComboBox */}
+          <Form.Select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            style={{ maxWidth: "300px" }}
+          >
+            <option value="default">Önerilen Sıralama</option>
+            <option value="nameAsc">İsme Göre (Artan)</option>
+            <option value="nameDesc">İsme Göre (Azalan)</option>
+            <option value="priceLowHigh">Fiyata Göre (Önce En Ucuz)</option>
+            <option value="priceHighLow">Fiyata Göre (Önce En Pahalı)</option>
+          </Form.Select>
+        </div>
+
         {isLoading ? (
           <div className="text-center">
             <Spinner animation="border" variant="primary" />
@@ -172,7 +203,9 @@ const ProductsBySearch: React.FC = () => {
 
             <Row xs={1} md={3} className="g-4">
               {products.length > 0 ? (
-                products.map((product) => <ProductCard product={product} key={product.id}/>)
+                sortProducts(products).map((product) => (
+                  <ProductCard product={product} key={product.id} />
+                ))
               ) : (
                 <div>Aradığınız kritlerde ürün bulunamadı.</div>
               )}
