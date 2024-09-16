@@ -2,12 +2,12 @@
     *for documentation, goto http://localhost:8080/swagger-ui/index.html#/ after running the java spring boot application.
 
 ## Techonologies
-    - [/] React (+React Router, Bootstrap, Axios, Formik, Material UI?...) 
+    - [x] React (+React Router, Bootstrap, Axios, Formik...) 
     - [x] Java Spring Boot(+Spring Security, Spring Data JPA...)
     - [x] MySQL, AWS
     - [/] JUnit, Jest
     - [x] Swagger
-    - [/] Typescript
+    - [x] Typescript
 
 ## How to Run/Use the App
     *first of all, you have to have a mysql database for everything to function properly.
