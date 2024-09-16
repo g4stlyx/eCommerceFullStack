@@ -76,7 +76,7 @@ const AdminReviews: React.FC = () => {
                     ({review.user.username} tarafından)
                   </span>
                 </h5>
-                <p className="mb-1" style={{ color: "#555" }}>
+                <p className="mb-1" style={{ color: "#555", textAlign:"left" }}>
                   {review.text}
                 </p>
                 <p className="mb-0" style={{ fontWeight: "500", textAlign:"left" }}>
